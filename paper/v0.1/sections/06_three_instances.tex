@@ -1,0 +1,516 @@
+% =============================================================
+% Section 6. Three Instances: TopSP, Finite Element EM, Brillouin Zone
+%
+% Source: A-route-ch3-three-instances-v0.2.md
+% Template: paper/v0.1/notes/narrative.md §4 §6
+% Cross-refs to §5: \cref{def:sheafBW}, \cref{prop:sheafBW-unitary},
+%                    \cref{thm:strict-equality}, \cref{def:Xsamp},
+%                    \cref{def:sampling-sheaf}, \cref{op:non-trivial-dagger}
+% =============================================================
+
+\noindent
+We instantiate the framework of \cref{sec:sheafbw} in three previously
+disjoint domains. Each instance specializes the abstract domain $V_?$
+to a domain-specific Hilbert subspace and the abstract operator $A$ to
+a domain-specific evaluation or quadrature operator, while the
+categorical structure---the abstract sampling cell complex $X^A$
+(\cref{def:Xsamp}), the sampling sheaf $\samps$
+(\cref{def:sampling-sheaf}), the strict equality
+\cref{thm:strict-equality}, and the unitary invariance
+\cref{prop:sheafBW-unitary}---is shared verbatim across the three
+instances. The categorical structure is unified verbatim, but the
+\emph{physical interpretations} differ instance by instance: in
+particular, the sampling map $S$ and integration map $I$ introduced in
+\cref{subsec:6-maps} are formal scalar maps on the geometry data $V$,
+and the role they play (evaluation versus quadrature, real versus
+synthetic data, independence versus coupling of $S$ and $I$) is
+instance-specific. The \emph{verbatim} clause refers to the categorical
+structure only, not to the physical correspondence; the explicit
+divergences are recorded in \cref{tab:6-instances} and in the
+per-instance discussion of \cref{subsec:6-bz}.
+
+% -------------------------------------------------------------
+\subsection{Common setup}\label{subsec:6-common}
+
+Throughout this section we fix a finite-dimensional Hilbert subspace
+$V_? \subset \C^N$ of dimension $K$, a sampling location set
+$V_s \subset \{1, \dots, N\}$ of size $M$, and the corresponding
+sampling operator
+\[
+  A : V_? \to \C^M,
+  \qquad
+  c \mapsto \bigl(c_{i_n}\bigr)_{n=1}^{M},
+\]
+where $\{i_n\}_{n=1}^{M}$ enumerates $V_s$. The abstract sampling cell
+complex $X^A$ is defined by \cref{def:Xsamp} (one principal $0$-cell
+$\sigma_B$, an auxiliary $0$-cell $\sigma_\infty$, and $M$ $1$-cells
+$\{\tau_i\}_{i \in V_s}$). The sampling sheaf $\samps$ is defined by
+\cref{def:sampling-sheaf} with stalks $\samps(\sigma_B) = V_?$,
+$\samps(\sigma_\infty) = 0$, $\samps(\tau_i) = \C$, and restriction
+maps $\eval_i$ at $\sigma_B$ and zero at $\sigma_\infty$.
+
+By \cref{thm:strict-equality}, under the hypothesis
+$\sigma_{\min}(A) > 0$ (equivalently $H^0(\samps_{V_s, V_?}) = 0$),
+\begin{equation}\label{eq:6-strict}
+  \sheafBW(\samps_{V_s, V_?})
+  \;=\;
+  \frac{\sigma_{\min}(A)}{\sigma_{\max}(A)},
+\end{equation}
+and by \cref{prop:sheafBW-unitary} this quantity is invariant under
+unitary equivalence of cellular sheaves over $X^A$. Each of the three
+instances below verifies the full-column-rank hypothesis under its
+standard configuration: Instance~1 by direct numerical check on
+$35$ MRI configurations (\cref{subsec:6-topsp}), Instance~2 by the
+$H^1$-Rayleigh basis of $V_S^{\FEM}$ being linearly independent at
+the chosen vertex sample (\cref{subsec:6-femem}), and Instance~3 by
+non-degeneracy of the linear tetrahedron weight matrix
+$w^{\mathrm{lin}}$ on the occupied subspace
+(\cref{subsec:6-bz}).
+
+The three instances differ only in the choice of $(V_?, A)$. We display
+them in a uniform format and summarize the comparison in
+\cref{tab:6-instances}.
+
+% -------------------------------------------------------------
+\subsection{Instance 1: Topological signal processing}\label{subsec:6-topsp}
+
+\paragraph{Domain $V_B^{\TopSP}$.}
+Let $X(V)$ be a cellular complex with vertex set
+$V = \{k_1, \dots, k_N\} \subset \Omega_k$, and let $L_0 = D - W$ be its
+graph Laplacian with eigendecomposition
+$(\mu_l, v_l)_{l=0}^{N-1}$, $\mu_0 \le \dots \le \mu_{N-1}$. Following
+\cite[\S 4.4]{BarbarossaSardellitti2020}, the Hodge bandlimited
+subspace at threshold $B$ is
+\[
+  V_B^{\TopSP}
+  \;=\;
+  \operatorname{span}\{\, v_l : \mu_l \le B \,\}
+  \;\subset\; \C^N,
+  \qquad
+  K \;=\; \dim V_B^{\TopSP}.
+\]
+
+\paragraph{Operator $A^{\TopSP}$.}
+With sampling location set $V_s$ of size $M$, the sampling operator is
+\[
+  A^{\TopSP}
+  \;:\;
+  V_B^{\TopSP} \to \C^M,
+  \qquad
+  A^{\TopSP}_{n,l}
+  \;=\;
+  v_l(i_n),
+  \qquad n = 1, \dots, M,\;\; l = 0, \dots, K-1.
+\]
+
+\paragraph{Sheaf bandwidth.}
+By \cref{eq:6-strict},
+\[
+  \sheafBW(\samps_{V_s, V_B^{\TopSP}})
+  \;=\;
+  \frac{\sigma_{\min}(A^{\TopSP})}{\sigma_{\max}(A^{\TopSP})}.
+\]
+
+\paragraph{Empirical evidence on real MRI data.}
+A simulation suite developed in the present project applied
+$\sigma_{\min}(A^{\TopSP})/\sigma_{\max}(A^{\TopSP})$ to $35$
+configurations covering five trajectory families (Cartesian, random,
+sparkling, spiral, radial) and seven $V_s$ sizes ($M$ ranging from
+$30$ to $400$, with base scale $N = 200$). All $35$ configurations
+attained full column rank, with a clear ordering: Cartesian sampling
+at $\sheafBW \approx 0.0091$ versus radial sampling at $\sheafBW
+\approx 2.07 \times 10^{-5}$, separating the two regimes by more
+than two orders of magnitude. The
+ordering matches the reconstruction quality reported in MRI sampling
+practice \cite{LustigDonohoPauly2007,LazarusEtAl2019Sparkling}. The
+numerical study is reported in \cref{sec:numerical}.
+
+% -------------------------------------------------------------
+\subsection{Instance 2: Finite element electromagnetics}\label{subsec:6-femem}
+
+\paragraph{Setup.}
+Let $\Omega \subset \R^3$ be a bounded Lipschitz domain with a
+simplicial mesh $K(\tau_h)$ (each top-dimensional simplex a
+tetrahedron). Following \cite{Whitney1957,Bossavit1988}, the Whitney
+$0$-form space is
+\[
+  W^0(K)
+  \;=\;
+  \operatorname{span}\{\, \lambda_i : i = 1, \dots, N \,\}
+  \;\cong\; \C^N
+  \qquad
+  (\lambda_i \text{ the hat function at vertex } x_i).
+\]
+
+\paragraph{Domain $V_S^{\FEM}$.}
+Let $\{w_l\}_{l=0}^{K-1}$ be the lowest $K$ eigenmodes of the
+$H^1$-Rayleigh quotient on $W^0(K)$, normalized so that
+$\langle w_l, w_m \rangle_{L^2} = \delta_{lm}$:
+\[
+  \langle \nabla w_l, \nabla \varphi \rangle_{L^2}
+  \;=\;
+  \lambda_l \, \langle w_l, \varphi \rangle_{L^2}
+  \quad \forall \varphi \in W^0(K),
+  \qquad
+  \lambda_0 \le \dots \le \lambda_{K-1}.
+\]
+Define
+\[
+  V_S^{\FEM}
+  \;:=\;
+  \operatorname{span}\{\, w_l : l = 0, \dots, K-1 \,\}
+  \;\subset\; \C^N.
+\]
+Then $V_S^{\FEM}$ is a $K$-dimensional Hilbert subspace of $\C^N$.
+
+\paragraph{Operator $A^{\FEM}$.}
+Choose $M$ vertices $\{x_{i_n}\}_{n=1}^{M}$ as the sampling locations.
+The sampling operator is
+\[
+  A^{\FEM} : V_S^{\FEM} \to \C^M,
+  \qquad
+  (A^{\FEM} c)_n
+  \;=\;
+  \sum_{l=0}^{K-1} c_l \, w_l(x_{i_n}),
+\]
+i.e.\ $A^{\FEM}_{n,l} = w_l(i_n)$, the same matrix form as
+$A^{\TopSP}$ with the basis $\{v_l\}$ replaced by the
+$H^1$-Rayleigh modes $\{w_l\}$. The pair $(V_S^{\FEM}, A^{\FEM})$
+satisfies the input requirements of \cref{thm:strict-equality}: (i)
+$V_S^{\FEM}$ is a finite-dimensional Hilbert subspace by
+construction; (ii) $A^{\FEM}$ is bounded and linear, automatic in
+finite dimensions; (iii) $\sigma_{\min}(A^{\FEM}) > 0$ holds under
+the standard non-degeneracy condition that the $H^1$-Rayleigh modes
+$\{w_l\}_{l=0}^{K-1}$ are linearly independent on the chosen vertex
+sample $\{x_{i_n}\}_{n=1}^{M}$, a mild assumption on the mesh and
+sample configuration.
+
+\paragraph{Project-internal scope: relation to AFW bounded cochain projection.}
+\cite{AFW2010} construct on the continuous Hilbert complex
+$(W^k(\Omega), d^k)$ a bounded cochain projection $\pi_h$ satisfying
+$\pi_h \circ \iota = \mathrm{id}_{V_h}$ and $d \circ \pi_h = \pi_h \circ
+d$ (\cite[\S 3.1.1]{AFW2010}). The operator $A^{\FEM}$ above and the
+AFW projector $\pi_h$ are distinct objects:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+& $A^{\FEM}$ (this paper) & $\pi_h$ (\cite{AFW2010}) \\
+\midrule
+Domain        & $V_S^{\FEM} \subset \C^N$ & $H \Lambda^k(\Omega)$ \\
+Codomain      & $\C^M$ (vertex evaluations) & finite-dim $V_h$ \\
+Role          & sampling operator & projection / interpolation \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The hypothesis of \cref{thm:strict-equality} requires a
+finite-dimensional Hilbert subspace and a bounded linear operator; it
+does not require a bounded cochain projection. Instance~2 is
+established within the finite-dimensional restriction of
+\cref{subsec:sheafbw-hilbert-complex}; the continuous-side extension to
+$H^1(\Omega)$ via $\pi_h$ is outside the scope of the present paper.
+
+\paragraph{Empirical evidence.}
+Instance~2 is established as a \emph{scope-bounded categorical claim}:
+the construction lies within the finite-dimensional restriction
+discussed above, and the symbolic identification $A^{\FEM} \cong \pi_h$
+holds verbatim under that restriction. No independent empirical channel
+(numerical study or established practice) is provided for Instance~2 in
+this paper; the evidence channels listed in \cref{tab:6-evidence} record
+this explicitly. The numerical verification in \cref{sec:numerical}
+covers the algebraic identity \cref{eq:6-strict} on Instance~1 and does
+not probe Instance~2 separately. The continuous-side extension to
+$H^1(\Omega)$ via the bounded cochain projection $\pi_h$ is outside the
+present paper's scope and is recorded as an engineering outlook in
+\cref{sec:discussion}.
+
+\paragraph{Sheaf bandwidth.}
+By \cref{eq:6-strict},
+\[
+  \sheafBW(\samps_{V_s, V_S^{\FEM}})
+  \;=\;
+  \frac{\sigma_{\min}(A^{\FEM})}{\sigma_{\max}(A^{\FEM})}.
+\]
+
+% -------------------------------------------------------------
+\subsection{Instance 3: Brillouin zone tetrahedron quadrature}\label{subsec:6-bz}
+
+\paragraph{Setup.}
+Let $\Omega_{\BZ} \subset \R^3$ be the first Brillouin zone of a
+crystalline solid, equipped with a tetrahedron tessellation by
+reciprocal-space points $\{\mathbf{k}_i\}_{i=1}^{N}$. For a fixed band
+index, let $\epsilon_i$ be the band energy at $\mathbf{k}_i$ and
+$\epsilon_F$ the Fermi level.
+
+\paragraph{Domain $V_{\occ}^{\BZ}$.}
+In the linear-segment regime of the Bl\"ochl tetrahedron method
+\cite[\S II.B]{Blochl1994}, the band energy $\epsilon(\mathbf{k})$ is
+linearly interpolated within each tetrahedron and the Heaviside step
+$\theta(\epsilon_F - \epsilon)$ is integrated exactly over this linear
+segment, yielding the linear tetrahedron weights $w^{\mathrm{lin}}_{i_n, j}$
+of \cite{LehmannTaut1972,JepsenAndersen1971,Blochl1994}. We define
+\[
+  V_{\occ}^{\BZ}
+  \;:=\;
+  \operatorname{span}\{\, \chi_i : i \in \mathrm{occ}(\epsilon_F) \,\}
+  \;\subset\;
+  \C^N
+\]
+as the span of Whitney $0$-form vertex hat functions $\chi_i$ at
+$\mathbf{k}_i$ over occupied $k$-points
+$\mathrm{occ}(\epsilon_F) = \{i : \epsilon_i \le \epsilon_F\}$;
+$K = |\mathrm{occ}(\epsilon_F)|$.
+
+\paragraph{Scope of $V_{\occ}^{\BZ}$.}
+The construction of $V_{\occ}^{\BZ}$ as a Whitney-$0$-form span is a
+project-internal categorical reformulation of the linear-tetrahedron
+framework; it is \emph{not} a standard ``occupied subspace'' of band
+theory (the standard object is the span of Bloch eigenfunctions of
+occupied bands, residing in a distinct vector space). The
+reformulation is motivated by the fact that the linear tetrahedron
+weights $w^{\mathrm{lin}}_{i_n, j}$ of
+\cite{Blochl1994,LehmannTaut1972,JepsenAndersen1971} are defined on
+this hat-function basis, making $V_{\occ}^{\BZ}$ the natural domain
+for the operator $A^{\BZ}$ of the next paragraph.
+
+\paragraph{Operator $A^{\BZ}$.}
+With $M$ test points (a sub-tetrahedral integration grid) at vertex
+locations,
+\[
+  A^{\BZ} : V_{\occ}^{\BZ} \to \C^M,
+  \qquad
+  A^{\BZ}_{n, j}
+  \;=\;
+  w_{i_n j}^{\mathrm{lin}},
+\]
+where $w_{i_n j}^{\mathrm{lin}}$ is the linear tetrahedron weight of
+\cite{LehmannTaut1972,JepsenAndersen1971}.
+
+\paragraph{Physical role of $A^{\BZ}$ versus $A^{\TopSP}$ and $A^{\FEM}$.}
+Across the three instances, the abstract operator $A : V_? \to \C^M$
+of \cref{subsec:6-common} plays structurally different physical
+roles. In \cref{subsec:6-topsp,subsec:6-femem} the matrix $A$ is a
+\emph{row-sampling} operator at vertex locations:
+$A^{\TopSP}_{n,l} = v_l(i_n)$ and $A^{\FEM}_{n,l} = w_l(i_n)$ are
+bare evaluations of basis functions. In Instance~3 the matrix
+$A^{\BZ}_{n,j} = w_{i_n j}^{\mathrm{lin}}$ is the
+linear-tetrahedron \emph{integration weight} matrix: the $n$-th row
+records the weights $w_{i_n j}^{\mathrm{lin}}$ that the
+sub-tetrahedral integration grid attaches to the occupied vertex
+basis at test point $i_n$. The two roles---row-sampling and
+quadrature weighting---are physically distinct.
+
+The categorical framework of \cref{sec:sheafbw}, however, requires
+only that $A$ be a bounded linear map $V_? \to \C^M$; it does not
+distinguish sampling-style from quadrature-style operators.
+Consequently:
+\begin{itemize}[leftmargin=*]
+\item the strict equality \cref{eq:6-strict} applies to $A^{\BZ}$
+  verbatim, with $\sheafBW$ measuring the conditioning of the
+  integration weight matrix on $V_{\occ}^{\BZ}$;
+\item the sampling map $S$ and the integration map $I$
+  defined in \cref{def:sampling-map,def:integration-map}
+  are formal scalar maps on the geometry parameter $V$ and do not
+  depend on the physical role of $A$ within an instance. In
+  Instance~3, $S^{\BZ}$ and $I^{\BZ}$ both involve the integration
+  weight matrix $A^{\BZ}$ and are therefore not physically
+  independent within the BZ context, although they remain formally
+  distinct as scalar maps of $V$. The directional content of
+  \cref{empirical:8b} is established across instances on the
+  $V$-parameter side, not within Instance~3 in isolation.
+\end{itemize}
+
+\paragraph{Project-internal scope: Bl\"ochl correction.}
+\cite{Blochl1994} introduces a quadratic correction term that improves
+the tetrahedron quadrature beyond the linear segment. This correction
+is a Richardson-extrapolation-style refinement that does not lie in
+the Whitney $0$-form framework (\cite[\S II.C]{Blochl1994}).
+Instance~3 is established within the linear-segment regime; extending
+sheaf bandwidth analysis to the Bl\"ochl-corrected quadrature is
+outside the scope of the present paper.
+
+\paragraph{Sheaf bandwidth.}
+By \cref{eq:6-strict},
+\[
+  \sheafBW(\samps_{V_s, V_{\occ}^{\BZ}})
+  \;=\;
+  \frac{\sigma_{\min}(A^{\BZ})}{\sigma_{\max}(A^{\BZ})}.
+\]
+
+\paragraph{Empirical evidence: five decades of practice.}
+Production density-functional codes have, since 1971, used
+non-Cartesian tessellations
+(Monkhorst--Pack \cite{MonkhorstPack1976}; tetrahedron methods
+\cite{LehmannTaut1972,JepsenAndersen1971,Blochl1994}) for Brillouin
+zone integration, while Cartesian quadrature is documented to perform
+worst on smooth band-structure integrands. This empirical hierarchy
+is consistent with the Pareto trade-off articulated below
+(\cref{empirical:8b}).
+
+% -------------------------------------------------------------
+\subsection{Three-instance comparison}\label{subsec:6-table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+& \textbf{Instance 1: TopSP} & \textbf{Instance 2: FEM--EM} & \textbf{Instance 3: BZ} \\
+\midrule
+$V_?$              & $V_B^{\TopSP}$ (Hodge band)     & $V_S^{\FEM}$ ($H^1$-Rayleigh)   & $V_{\occ}^{\BZ}$ (Whitney $0$-form, occupied) \\
+$A_{n,l}$          & $v_l(i_n)$                       & $w_l(i_n)$                        & $w_{i_n j}^{\mathrm{lin}}$ \\
+Physical role of $A$ & row-sampling                   & row-sampling                      & integration weights \\
+$\sheafBW$         & $\sigma_{\min}/\sigma_{\max}$    & $\sigma_{\min}/\sigma_{\max}$     & $\sigma_{\min}/\sigma_{\max}$ \\
+Empirical evidence & $35/35$ MRI configs              & finite-dim restriction            & 50-year practice \\
+Reference          & \cite{BarbarossaSardellitti2020} & \cite{AFW2010,Whitney1957}        & \cite{Blochl1994,LehmannTaut1972} \\
+\bottomrule
+\end{tabular}
+\caption{Three instances of the framework of \cref{sec:sheafbw}. The
+  categorical structure $X^A + \samps + \cref{thm:strict-equality} +
+  \cref{prop:sheafBW-unitary}$ is shared verbatim. The instances differ
+  only in the domain-specific choice of $(V_?, A)$; the spectral ratio
+  $\sigma_{\min}(A)/\sigma_{\max}(A)$ is the unified invariant.}
+\label{tab:6-instances}
+\end{table}
+
+% -------------------------------------------------------------
+\subsection{Sampling and integration maps}\label{subsec:6-maps}
+
+The unified description suggests two scalar maps on the same data.
+
+\begin{definition}[Sampling map]\label{def:sampling-map}\footnote{Not formalized in Lean 4. The sampling map $S$ is a physical correspondence (B-spline FE, quadrature, Bloch--Floquet $\psi_\theta$, etc.) from geometry $V$ to spectral data, not a mathematical theorem statement. See \texttt{lean/CROSSREF.md} \S C.}
+For a fixed $V_?$, the \emph{sampling map} $S$ assigns to a sampling
+cell complex $X^A_V$ (parameterized by the geometry $V$) the spectral
+ratio
+\[
+  S(X^A_V)
+  \;:=\;
+  \sheafBW(\samps_V)
+  \;=\;
+  \frac{\sigma_{\min}(A_V)}{\sigma_{\max}(A_V)}.
+\]
+By \cref{prop:sheafBW-unitary}, $S$ is invariant under unitary
+equivalence of cellular sheaves over $X^A$.
+\end{definition}
+
+\begin{definition}[Integration map]\label{def:integration-map}\footnote{Not formalized in Lean 4. The integration map $I$ is a physical correspondence (quadrature error norm) from geometry $V$ to scalar error, not a mathematical theorem statement. See \texttt{lean/CROSSREF.md} \S C.}
+For a fixed $V_?$, the \emph{integration map} $I$ assigns to $X^A_V$
+the quadrature error norm
+\[
+  I(X^A_V)
+  \;:=\;
+  \biggl\|\, \mathcal{I}^* \;-\; \sum_{i \in V_s} w_i \, \eval_i^*\, \biggr\|_{V_? \to \C},
+\]
+where $\mathcal{I}^* : V_? \to \C$ is an exact-integration dual
+functional and $\{w_i\}_{i \in V_s}$ are quadrature weights, both
+chosen instance-specifically (e.g., the linear-tetrahedron weight
+$w^{\mathrm{lin}}$ of \cref{subsec:6-bz} for Instance~3).
+\end{definition}
+
+The choice of $\mathcal{I}^*$ and $\{w_i\}$ is fixed per instance and
+not unique across instances; the across-instance directional content
+of \cref{empirical:8b} does not depend on a specific choice (cf.\
+the disclaim in \cref{subsec:6-bz} on the formal nature of $S, I$).
+
+% -------------------------------------------------------------
+\subsection{Empirical Proposition: $S$--$I$ Pareto trade-off}\label{subsec:6-empirical}
+
+\begin{empirical}[Sampling and integration trace a Pareto frontier under $V$-optimization]\label{empirical:8b}\footnote{Not formalized in Lean 4. This is an \emph{empirical} proposition supported by two quantitative evidence channels plus one heuristic skeleton (see body); it is not promoted to theorem status per the double-track verification principle. See \texttt{lean/CROSSREF.md} \S C.}
+Fix the type of $V_?$ (one of $V_B^{\TopSP}$, $V_S^{\FEM}$,
+$V_{\occ}^{\BZ}$) and the strategy for choosing $V_s$. As the geometry
+$V$ varies over admissible cellular complexes, no $V$ simultaneously
+maximizes $V \mapsto S(X^A_V)$ and minimizes $V \mapsto I(X^A_V)$;
+the pair $(S, I)$ traces a Pareto frontier in $V$.
+\end{empirical}
+
+\paragraph{Heuristic skeleton.}
+The strict equality~\cref{eq:6-strict} gives the $S$-side directly.
+For the $I$-side, the spectral framework of \cite{Pilleboue2015} on
+Euclidean point sets suggests, for sufficiently smooth integrands, a
+directional decomposition: the integration error scales with the
+high-frequency tail of the integrand expanded in the $V_?$ eigenbasis,
+weighted by the Fourier spectrum of the sample-set indicator. This is
+a heuristic of directional value only, not a quantitative bound on
+cellular-sheaf integration. The directional content of
+\cref{empirical:8b} is the following.
+\begin{itemize}[leftmargin=*]
+\item $S$ is large iff the columns of $A_V$ are close to orthonormal
+  on $V_s$, which holds when the geometry $V_s$ is locally coherent
+  with the $V_?$-modes $\{v_l\}$. Regular structures (Cartesian grids)
+  achieve this local coherence.
+\item $I$ is small iff the spectrum of $V_s$ flattens at high
+  frequencies, which requires the geometry $V_s$ to break regular
+  structure. Blue-noise tessellations \cite{HeitzBelcour2019} and
+  Monkhorst--Pack grids \cite{MonkhorstPack1976} exemplify this.
+\end{itemize}
+The two requirements pull $V$ in opposite directions: sampling favors
+regular structure; integration favors broken regularity. This is the
+heuristic content of \cref{empirical:8b}.
+
+\paragraph{Evidence and heuristic skeleton.}
+The directional content of \cref{empirical:8b} is supported by two
+empirical channels and a heuristic skeleton, recorded in
+\cref{tab:6-evidence}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llll}
+\toprule
+\textbf{Type} & \textbf{Item} & \textbf{Source} & \textbf{Strength} \\
+\midrule
+Empirical & b3pre numerical study ($35$ configs, multi-$N$ robustness) & this paper, \cref{sec:numerical}      & strong \\
+Empirical & Brillouin zone practice (five decades)                       & \cite{Blochl1994,LehmannTaut1972,JepsenAndersen1971} & strong \\
+Heuristic & Euclidean spectral framework (Fourier-spectrum form)       & \cite{Pilleboue2015}                   & directional only \\
+\bottomrule
+\end{tabular}
+\caption{Two empirical channels and one heuristic skeleton
+  supporting \cref{empirical:8b}. The b3pre numerical study and the
+  multi-$N$ robustness scan are stratifications of a single
+  project-internal study, counted as one empirical channel. The
+  Brillouin zone practice channel is independent published evidence
+  on $V$-geometry choice for quadrature, not on the joint
+  sampling-vs-integration trade-off; it supports the directional
+  content via the integration side. The Pilleboue spectral framework
+  is a heuristic skeleton on Euclidean Monte Carlo variance, not
+  direct evidence on cellular-sheaf integration on simplicial or
+  tetrahedral complexes.}
+\label{tab:6-evidence}
+\end{table}
+
+\paragraph{Status.}
+\cref{empirical:8b} is a directional statement supported by two
+empirical channels and a heuristic skeleton (\cref{tab:6-evidence});
+it is not a constructive Pareto-optimality theorem. Constructive proofs typically
+require compactness arguments and convex-optimization duality applied
+to the joint $(S, I)$ map. The constructive proof is treated as an
+independent open problem (\cref{op:8b-rigor} below). Should that open
+problem be resolved, \cref{empirical:8b} upgrades to a theorem.
+
+% -------------------------------------------------------------
+\subsection{Open Problem: constructive Pareto proof}\label{subsec:6-op}
+
+\begin{openproblem}[Constructive Pareto proof for \cref{empirical:8b}]\label{op:8b-rigor}
+Establish, by compactness arguments and convex-optimization duality on
+the joint map $V \mapsto (S(X^A_V), I(X^A_V))$, the formal statement
+that no admissible geometry $V$ simultaneously achieves
+$S(X^A_V) > S^* - \epsilon$ and $I(X^A_V) < I^* + \epsilon$ for
+sufficiently small $\epsilon > 0$, where $(S^*, I^*)$ are the Pareto
+extrema. The expected mode of attack:
+\begin{enumerate}[leftmargin=*]
+\item compactness of the $V$-parameter space (under suitable boundary
+  conditions);
+\item convex relaxation of the joint map, with the dual optimization
+  encoding the trade-off;
+\item closing the duality gap via spectral arguments paralleling
+  \cite{Pilleboue2015}.
+\end{enumerate}
+\cref{op:8b-rigor} is independent of the main theorems of this paper:
+\cref{empirical:8b} is not invoked in the proof of
+\cref{thm:strict-equality}, and the categorical bridge stands without
+it.
+\end{openproblem}
+
+\noindent
+The unified framework reduces all three instances to a spectral ratio
+on $A$. We verify this strict equality numerically across the three
+instances in \cref{sec:numerical}.

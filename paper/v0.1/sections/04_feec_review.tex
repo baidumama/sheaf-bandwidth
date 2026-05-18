@@ -1,0 +1,356 @@
+% =============================================================
+% Section 4. Finite Element Exterior Calculus: W^0 Lift and P Projection
+%
+% Character: comparative review chapter. We introduce no new theory.
+% =============================================================
+
+% --- Opening hook (continuing from Section 3) ---
+The technical core of Robinson's open problem---a sheaf-categorically
+intrinsic bandwidth---requires lifting Hilbert-complex structure,
+Hodge decomposition, and bounded cochain projection from the
+continuous setting of finite element exterior calculus (FEEC) to
+cellular sheaves of Hilbert spaces. We review the necessary FEEC
+machinery in this section. The exposition is comparative: four
+schools---mimetic discretization \cite{BochevHyman2006}, finite
+element systems \cite{Christiansen2010}, FEEC Hilbert complexes
+\cite{AFW2010}, and dagger Galerkin \cite{LahtinenStenvall2020}---
+have developed the same family of constructions in disjoint
+vocabularies over three decades. \emph{This section is a
+comparative review; we do not introduce new theory.} Its purpose is
+disambiguation and a side-by-side mapping that makes the
+sheaf-side interface of \cref{sec:sheafbw} statable.
+
+% =============================================================
+\subsection{Bochev--Hyman reduction and reconstruction}\label{subsec:feec-bh}
+% =============================================================
+
+The mimetic-discretization framework of Bochev--Hyman
+\cite{BochevHyman2006} organizes the connection between continuous
+differential forms and discrete cochains around a pair of maps and a
+commuting diagram.
+
+\begin{definition}[Reduction and Whitney reconstruction]\label{def:bh-RI}
+Let $\mathcal{T}$ be a cellular complex and $\Lambda^k(\Omega)$ the
+space of differential $k$-forms on a domain $\Omega \supset
+\lvert \mathcal{T} \rvert$. The \emph{reduction} (or de Rham map)
+\[
+  R : \Lambda^k(\Omega) \longrightarrow C^k(\mathcal{T}),
+  \qquad
+  R(\omega)(\sigma) := \int_\sigma \omega
+  \quad\text{for $k$-cells } \sigma \in \mathcal{T},
+\]
+is the integration cochain map \cite[\S 1]{BochevHyman2006}, and the
+\emph{Whitney reconstruction}
+\[
+  I_W : C^k(\mathcal{T}) \longrightarrow V_W^k \subset \Lambda^k(\Omega),
+\]
+sends a cochain to the unique Whitney $k$-form interpolating it on
+each cell of $\mathcal{T}$
+\cite{Whitney1957,Bossavit1988}.\footnote{Bochev--Hyman~%
+\cite{BochevHyman2006} originally write $R/I$ for the
+reduction/reconstruction pair. To avoid clash with the integration
+map $I$ used in \cref{sec:three_instances} for the
+sampling/integration duality, we write $R/I_W$ throughout this paper,
+with subscript $W$ indicating Whitney reconstruction.}
+\end{definition}
+
+\begin{proposition}[Commuting Stokes; cf.\ {\cite[\S 2]{BochevHyman2006}}]
+\label{prop:commuting-stokes}
+With $R$ and $I_W$ as above, $R \circ d = \delta \circ R$, where $d$
+is the exterior derivative on $\Lambda^k(\Omega)$ and $\delta$ is the
+cochain coboundary on $C^k(\mathcal{T})$. Equivalently, $R$ is a
+chain map between the de Rham complex of $\Omega$ and the cochain
+complex of $\mathcal{T}$. The natural inner product on
+$C^k(\mathcal{T})$ induced by Whitney reconstruction is
+$\langle c, c' \rangle_{C^k} := \langle I_W c, I_W c' \rangle_{L^2(\Omega)}$.
+\end{proposition}
+
+The pair $(R, I_W)$ behaves asymmetrically with respect to composition:
+
+\begin{remark}[$I_W$ is not a projection]\label{rem:IW-not-projection}
+On $V_W^k \subset \Lambda^k(\Omega)$ one has $R \circ I_W = \mathrm{id}_{C^k}$
+\cite{Whitney1957}, but on the larger ambient $\Lambda^k(\Omega)$ the
+composition $I_W \circ R$ is not the identity, and $I_W$ is not a
+bounded $L^2$-projection onto $V_W^k$. The same observation is
+recorded explicitly by Falk--Winther \cite{FalkWinther2014}: ``the
+operator is not a projection since it is not equal to the identity on
+the Whitney forms.'' The repair is the construction of a
+\emph{bounded cochain projection} $\pi_h$ in
+\cref{subsec:feec-afw}.
+\end{remark}
+
+% =============================================================
+\subsection{Christiansen finite element systems}\label{subsec:feec-fes}
+% =============================================================
+
+The mimetic framework of \cref{subsec:feec-bh} acquires a contravariant
+functor form in Christiansen's finite element system (FES) framework
+\cite{Christiansen2010}.
+
+\begin{definition}[Finite element system; {\cite[\S 2, Def.~2]{Christiansen2010}}]
+\label{def:christiansen-fes}
+Let $\mathcal{T}$ be a cellular complex. A \emph{finite element system}
+on $\mathcal{T}$ assigns, to each $k \in \mathbb{N}$ and each cell
+$T \in \mathcal{T}$, a vector space
+$\mathcal{E}^k(T) \subseteq \widehat{X}^k(T)$
+of \emph{differential $k$-elements}\footnote{We follow
+\cite[\S 2, Def.~2]{Christiansen2010} with one notational change: we
+write $\mathcal{E}^k(T)$ for what \cite{Christiansen2010} denotes
+$A^k(T)$, since $A$ is reserved throughout this paper for the
+sampling operator $A : V_B \to \C^M$ of \cref{eq:A-def}.}
+such that
+\begin{enumerate}
+  \item $d : \mathcal{E}^k(T) \to \mathcal{E}^{k+1}(T)$ is well
+        defined; and
+  \item for every cell inclusion $i : T' \subseteq T$, the pullback
+        $i^\star : \mathcal{E}^k(T) \to \mathcal{E}^k(T')$ is a
+        morphism of vector spaces.
+\end{enumerate}
+\end{definition}
+
+\Cref{def:christiansen-fes} exhibits an FES as a contravariant functor
+from the poset category of $\mathcal{T}$ (objects: cells; morphisms:
+inclusions) to $\Vect$, with $T \mapsto \mathcal{E}^k(T)$ and
+inclusions sent to pullbacks. Christiansen and Rapetti
+\cite{ChristiansenRapetti2025} state this categorical reading
+explicitly: ``a FES is just a contravariant functor from the
+(poset) category determined by the mesh, to the category of vector
+spaces.'' Whitney $k$-forms are an instance:
+\cite[Example~2.3]{Christiansen2010} identifies the case of the
+trimmed polynomial complex of degree~$1$ with the Whitney form
+construction of \cite{Whitney1957}, applied in computational
+electromagnetics by \cite{Bossavit1988}.
+
+The de Rham map of an FES recovers cohomology in the following sense.
+
+\begin{proposition}[{\cite[Prop.~2.10]{Christiansen2010}}]\label{prop:fes-derham}
+Under the compatibility hypotheses of
+\cite[\S 2, Def.~3]{Christiansen2010}, the de Rham map from an FES to
+the simplicial cochain complex of $\mathcal{T}$ induces an isomorphism
+on cohomology.
+\end{proposition}
+
+% =============================================================
+\subsection{AFW Hilbert complexes and bounded cochain projection}\label{subsec:feec-afw}
+% =============================================================
+
+The framework of \cref{subsec:feec-bh,subsec:feec-fes} acquires its
+analytic completion in the FEEC Hilbert-complex framework of
+Arnold--Falk--Winther \cite{AFW2006,AFW2010}, which extends the
+algebraic structure to closed densely-defined operators between
+Hilbert spaces.
+
+\begin{definition}[Hilbert complex; {\cite[\S 3.1.3]{AFW2010},
+\cite{BruningLesch1992}}]\label{def:afw-hilbert-complex}
+A \emph{Hilbert complex} is a sequence $(W^k, d^k)_{k \ge 0}$ in
+which each $W^k$ is a Hilbert space and each
+$d^k : W^k \to W^{k+1}$ is a closed, densely defined linear operator
+satisfying $\mathrm{range}(d^k) \subseteq \mathrm{dom}(d^{k+1})$ and
+$d^{k+1} \circ d^k = 0$. The complex is \emph{closed} when, for each
+$k$, the range of $d^k$ is closed in $W^{k+1}$.
+\end{definition}
+
+Closedness yields the standard Hodge decomposition. Writing
+$(d^k)^*$ for the Hilbert adjoint of $d^k$, set
+$\Delta_k := d^{k-1} (d^{k-1})^* + (d^k)^* d^k$.
+
+\begin{theorem}[Hodge decomposition;
+{\cite[\S 3.2]{AFW2010},\cite{BruningLesch1992}}]\label{thm:afw-hodge}
+For a closed Hilbert complex $(W^k, d^k)$,
+\[
+  W^k \;=\; \overline{\mathrm{range}(d^{k-1})}
+  \;\oplus\; \mathrm{ker}(\Delta_k)
+  \;\oplus\; \overline{\mathrm{range}((d^k)^*)},
+\]
+the three summands being mutually orthogonal. The harmonic space
+$\mathcal{H}^k := \mathrm{ker}(\Delta_k)$ is canonically isomorphic
+to the cohomology $H^k$ of the complex.
+\end{theorem}
+
+The discrete-side structure that connects $W^k$ to a finite-dimensional
+subcomplex $W_h^k$ is the \emph{bounded cochain projection}.
+
+\begin{definition}[Bounded cochain projection;
+{\cite[\S 3.1.1]{AFW2010},\cite{FalkWinther2014}}]\label{def:bounded-pi}
+A family of operators $\pi_h^k : W^k \to W_h^k$ is a
+\emph{bounded cochain projection} when, for each $k$, it satisfies
+\begin{enumerate}
+  \item $\pi_h^k \circ \iota_h = \mathrm{id}_{W_h^k}$, where
+        $\iota_h : W_h^k \hookrightarrow W^k$ is the canonical
+        inclusion (true projection);
+  \item $d^k \circ \pi_h^k = \pi_h^{k+1} \circ d^k$ on
+        $\mathrm{dom}(d^k)$ (commutation with the coboundary);
+  \item $\lVert \pi_h^k \rVert$ is uniformly bounded with respect to
+        the mesh parameter $h$.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[{\cite[Thm.~3.6]{AFW2010}}]\label{thm:afw-cohomology}
+If $(W_h^k, d^k)$ is a subcomplex of a closed Hilbert complex
+$(W^k, d^k)$ admitting a bounded cochain projection, then the
+cohomology of the subcomplex is canonically isomorphic to that of
+the ambient complex, and the harmonic spaces have equal dimension.
+\end{theorem}
+
+Falk--Winther \cite{FalkWinther2014} construct a \emph{local}
+bounded cochain projection meeting all three conditions of
+\cref{def:bounded-pi} on simplicial subcomplexes; the construction
+repairs the obstruction in \cref{rem:IW-not-projection} by replacing
+$I_W$ with a smoothed extension that retains the commutation with
+$d$ while becoming a true projection. Christiansen
+\cite[\S 4]{Christiansen2010} gives a related family of
+quasi-interpolators.
+
+% =============================================================
+\subsection{Lahtinen--Stenvall dagger mono form of Galerkin}\label{subsec:feec-dagger}
+% =============================================================
+
+A complementary categorical reading is provided by Lahtinen and
+Stenvall \cite{LahtinenStenvall2020}, who characterize Galerkin
+discretization as a morphism in the dagger category
+$\Hilb$ of Hilbert spaces with bounded linear maps.
+
+A \emph{dagger category} \cite{HeunenVicary2019} is a category
+equipped with an involutive contravariant identity-on-objects functor
+$\dagger$; in $\Hilb$, $f^\dagger$ is the Hilbert adjoint of
+$f : H_1 \to H_2$. A \emph{dagger mono} is a morphism
+$\iota : H_h \to H$ with $\iota^\dagger \circ \iota = \mathrm{id}_{H_h}$,
+equivalently an isometric embedding.
+
+\begin{proposition}[Galerkin as dagger mono;
+{\cite{LahtinenStenvall2020}}]\label{prop:galerkin-dagger}
+Discretization of a finite element method, viewed as a morphism in
+$\Hilb$, is a dagger mono $\iota_h : V_h \hookrightarrow V$ from a
+finite-dimensional discrete domain into the continuous Hilbert
+space. The Galerkin projection $V \to V_h$ is the dagger
+$\iota_h^\dagger$ of this embedding.
+\end{proposition}
+
+\Cref{prop:galerkin-dagger} aligns the FEEC framework with the
+dagger-categorical formulation: $\iota_h$ is a dagger mono in
+$\Hilb$ in the same sense as the inclusion of the Whitney form
+subspace $V_W^k \hookrightarrow \Lambda^k(\Omega)$, and the Galerkin
+projection is its Hilbert adjoint. The bounded cochain projection
+$\pi_h$ of \cref{def:bounded-pi} is not, in general, a dagger
+projection (i.e., it need not equal $\iota_h^\dagger$), since the
+local construction of \cite{FalkWinther2014} sacrifices
+self-adjointness in exchange for locality and uniform boundedness.
+
+% =============================================================
+\subsection{Four-school comparison table}\label{subsec:feec-comparison}
+% =============================================================
+
+The four schools of \cref{subsec:feec-bh,subsec:feec-fes,subsec:feec-afw,subsec:feec-dagger}
+develop the same family of constructions in disjoint vocabularies.
+\Cref{tab:feec-four-schools} records the side-by-side mapping.
+
+\begin{table}[h]
+  \centering
+  \small
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    Construction & Bochev--Hyman \cite{BochevHyman2006} &
+       Christiansen \cite{Christiansen2010} &
+       AFW \cite{AFW2010} \\
+    \midrule
+    Continuous space &
+       $\Lambda^k(\Omega)$ & $\widehat{X}^k(T)$ & $W^k$ \\
+    Discrete space &
+       $C^k(\mathcal{T})$ & $\mathcal{E}^k(T)$ & $W_h^k$ \\
+    Coboundary & $\delta$ on $C^k$ & $d$ on $\mathcal{E}^k$ &
+       $d^k$ on $W^k$ \\
+    Lift to ambient &
+       $I_W$ (Whitney) & FES inclusions \cite[Ex.~2.3]{Christiansen2010} &
+       $\iota_h : W_h^k \hookrightarrow W^k$ \\
+    Reduction to discrete &
+       $R$ (de Rham map) & pullbacks $i^\star$ & $\pi_h^k$
+       (bounded cochain projection) \\
+    Commutation &
+       $R \circ d = \delta \circ R$ & functoriality of FES &
+       $d^k \circ \pi_h^k = \pi_h^{k+1} \circ d^k$ \\
+    Cohomology agreement &
+       (implicit via Whitney 1957) & \cite[Prop.~2.10]{Christiansen2010} &
+       \cite[Thm.~3.6]{AFW2010} \\
+    \bottomrule
+  \end{tabular}
+  \caption{The mimetic, FES, and AFW frameworks for the
+    same family of constructions, mapped column by column. The
+    Lahtinen--Stenvall framework \cite{LahtinenStenvall2020} reads
+    the inclusion row as a dagger mono in
+    $\Hilb$.}\label{tab:feec-four-schools}
+\end{table}
+
+\begin{remark}[Common scope]\label{rem:feec-scope}
+Each of the four schools establishes its constructions for a single
+Hilbert complex (continuous side) related to a single subcomplex
+(discrete side). None of the four schools attaches the constructions
+to a sheaf over a cell complex with non-trivial restriction maps
+between stalks. The transition to the sheaf side is taken in
+\cref{sec:sheafbw}.
+\end{remark}
+
+% =============================================================
+\subsection{Robinson's open problem: technical interface}\label{subsec:feec-robinson-interface}
+% =============================================================
+
+Robinson \cite[\S 6]{Robinson2014} writes that ``If $F$ and $S$ are
+sheaves of Hilbert spaces then their cochain complexes are Hilbert
+complexes, and they have a Hodge decomposition\ldots\ There may be
+a way to discuss the concept of \emph{bandwidth} for general sheaves
+of Hilbert spaces.'' \Cref{thm:triangle-equiv,def:sheafbw-candidate}
+narrowed this to the two-clause problem
+\textup{(R1)}--\textup{(R2)} of \cref{subsec:tri-narrowing}.
+\Cref{sec:sheafbw} answers it in three steps, each of which uses one
+ingredient of the FEEC machinery reviewed above.
+
+\begin{enumerate}
+  \item[\textbf{Step 1:}] \emph{Hilbert complex structure on cellular
+        sheaves of Hilbert spaces.} Each stalk
+        $\mathscr{A}(\sigma)$ becomes a Hilbert space, restriction
+        maps become bounded operators, and the cochain spaces
+        $C^k(\mathscr{A})$ assemble into a closed Hilbert complex
+        in the sense of \cref{def:afw-hilbert-complex}. In the
+        finite-dimensional setting of \cref{sec:sheafbw}, closedness
+        of cochain ranges is automatic
+        (\cref{thm:closed-hilbert-complex}). This step lifts
+        \cref{def:afw-hilbert-complex} from a single chain to a
+        sheaf-valued chain.
+  \item[\textbf{Step 2:}] \emph{Hodge decomposition stalk-wise with
+        restriction commutation.} \Cref{thm:afw-hodge} applied to
+        the sheaf-cochain Hilbert complex of Step~1 yields a
+        decomposition of $C^k(\mathscr{A})$ into exact, harmonic,
+        and co-exact summands; the restriction maps of $\mathscr{A}$
+        commute with the decomposition by functoriality. The
+        sheaf Laplacian of \cite{HansenGhrist2019} is the
+        finite-dimensional specialization.
+  \item[\textbf{Step 3:}] \emph{Categorically intrinsic sheaf
+        bandwidth.} \Cref{def:bounded-pi}'s view of
+        well-conditioning as the boundedness of $\pi_h$ is replaced
+        on the sheaf side by a spectral-gap ratio of the sheaf
+        coboundary $\delta^0$, namely
+        $\sheafBW := \sqrt{\gamma_+(\delta^0) /
+        \Gamma_+(\delta^0)}$, defined intrinsically on the cellular
+        sheaf data of $\mathscr{A}$. This step answers
+        clauses~\textup{(R1)} and \textup{(R2)} of
+        \cref{subsec:tri-narrowing}; it is constructed in
+        \cref{sec:sheafbw}.
+\end{enumerate}
+
+Steps~1 and~2 are direct transcriptions of \cite{AFW2010}
+\cref{def:afw-hilbert-complex,thm:afw-hodge} into the sheaf setting
+and contribute no new theory. Step~3 is the categorically intrinsic
+bandwidth definition; it is the locus of the new content of this
+paper, completed in \cref{sec:sheafbw}.
+
+% --- Closing hook (to Section 5) ---
+\Cref{def:afw-hilbert-complex,thm:afw-hodge,def:bounded-pi}, together
+with the FES contravariant functor form
+\cref{def:christiansen-fes,prop:fes-derham} and the dagger
+formulation \cref{prop:galerkin-dagger}, supply the algebraic
+machinery: closed Hilbert complexes, Hodge decompositions, and
+bounded cochain projections, with the categorical structures that
+make their sheaf-side transcription unambiguous. What is missing on
+the sheaf side---a categorically intrinsic bandwidth answering
+clauses~\textup{(R1)} and~\textup{(R2)} of
+\cref{subsec:tri-narrowing}---is constructed in
+\cref{sec:sheafbw}.

@@ -1,0 +1,194 @@
+% =============================================================
+% Sheaf Bandwidth: A Categorical Bridge Between Topological
+% Signal Processing and Finite Element Exterior Calculus
+%
+% Paper v0.1 (LaTeX source)
+% =============================================================
+
+\documentclass[11pt,reqno]{amsart}
+
+% ---------------- Geometry & spacing ----------------
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+
+% ---------------- Math packages ----------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{mathrsfs}     % \mathscr for sheaves
+\usepackage{bbm}          % \mathbbm for blackboard with non-letters
+
+% ---------------- Diagrams (optional, for sheaf restriction maps) ----------------
+\usepackage{tikz-cd}
+
+% ---------------- Lists & tables ----------------
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+% ---------------- Hyperref (load last) ----------------
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\usepackage{cleveref}
+
+% =============================================================
+% Theorem environments
+% =============================================================
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+% Empirical Proposition: a non-theorem-strength statement supported by
+% (i) a heuristic skeleton and (ii) crossed evidence channels.
+\theoremstyle{definition}
+\newtheorem{empirical}[theorem]{Empirical Proposition}
+
+% Open Problem: an explicit, independent open question.
+\theoremstyle{definition}
+\newtheorem{openproblem}[theorem]{Open Problem}
+
+% Cleveref naming
+\crefname{theorem}{Theorem}{Theorems}
+\crefname{lemma}{Lemma}{Lemmas}
+\crefname{proposition}{Proposition}{Propositions}
+\crefname{corollary}{Corollary}{Corollaries}
+\crefname{definition}{Definition}{Definitions}
+\crefname{remark}{Remark}{Remarks}
+\crefname{empirical}{Empirical Proposition}{Empirical Propositions}
+\crefname{openproblem}{Open Problem}{Open Problems}
+
+% =============================================================
+% Symbol macros (sync with paper/v0.1/notes/symbols.md §4)
+% =============================================================
+
+% --- Operators ---
+\DeclareMathOperator{\sheafBW}{sheafBW}
+\DeclareMathOperator{\spec}{spec}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\eval}{eval}
+
+% --- Subscript / superscript labels ---
+\newcommand{\samp}{\mathrm{samp}}
+\newcommand{\fin}{\mathrm{fin}}
+\newcommand{\TopSP}{\mathrm{TopSP}}
+\newcommand{\FEM}{\mathrm{FEM}}
+\newcommand{\BZ}{\mathrm{BZ}}
+\newcommand{\occ}{\mathrm{occ}}
+
+% --- Categories ---
+\newcommand{\Hilb}{\mathsf{Hilb}}
+\newcommand{\Vect}{\mathsf{Vect}}
+\newcommand{\CellSh}{\mathsf{Cell\text{-}Sh}}
+
+% --- Number sets ---
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+% --- Sampling sheaf shorthand ---
+\newcommand{\samps}{\mathscr{A}^{\samp}}
+
+% =============================================================
+% Lean 4 formalization cross-reference
+% =============================================================
+% \leanref{file}{name} — footnote pointing to Lean 4 formalization.
+% Example: \leanref{MRI/Cellular/SamplingSpectral}{strict\_equality}
+% Companion artifact: lean/CROSSREF.md (full paper-Lean correspondence table).
+\newcommand{\leanref}[2]{%
+  \footnote{Formalized in Lean 4: theorem \texttt{#2} in file
+    \texttt{lean/#1.lean}. Full correspondence: \texttt{lean/CROSSREF.md}.}}
+
+% =============================================================
+% Title & metadata
+% =============================================================
+\title[Sheaf Bandwidth: A Categorical Bridge]{Sheaf Bandwidth:\\
+  A Categorical Bridge Between Topological Signal Processing\\
+  and Finite Element Exterior Calculus}
+
+\author{[Author placeholder]}
+\address{Independent Researcher}
+\email{[Email placeholder]}
+
+\date{\today}
+
+\subjclass[2020]{18F20, 65N30, 94A20, 55U10}
+\keywords{Sheaf bandwidth, cellular sheaf, finite element exterior calculus,
+  Hodge decomposition, sampling theorem, Brillouin zone tetrahedron,
+  $k$-space sampling, MRI}
+
+% =============================================================
+\begin{document}
+\maketitle
+
+% Phase 1 sanity: \nocite{*} forces bibtex to include all entries
+% so we exercise every refs.bib entry. Remove before submission.
+\nocite{*}
+
+% =============================================================
+\begin{abstract}
+\input{sections/00_abstract}
+\end{abstract}
+
+% =============================================================
+% Section 1. Introduction
+% =============================================================
+\section{Introduction}\label{sec:intro}
+\input{sections/01_intro}
+
+% =============================================================
+% Section 2. Related Work
+% =============================================================
+\section{Related Work}\label{sec:related}
+\input{sections/02_related}
+
+% =============================================================
+% Section 3. Triangle Equivalence
+% =============================================================
+\section{Triangle Equivalence: FEEC Geometry, Hodge Spectrum, and Robinson Sheaf Cohomology}\label{sec:triangle}
+\input{sections/03_triangle_equivalence}
+
+% =============================================================
+% Section 4. FEEC W^0 / P Review
+% =============================================================
+\section{Finite Element Exterior Calculus: $W^0$ Lift and $P$ Projection}\label{sec:feec_review}
+\input{sections/04_feec_review}
+
+% =============================================================
+% Section 5. Sheaf Bandwidth Categorically Intrinsic
+% =============================================================
+\section{Sheaf Bandwidth: A Categorically Intrinsic Definition}\label{sec:sheafbw}
+\input{sections/05_sheaf_bandwidth}
+
+% =============================================================
+% Section 6. Three Instances
+% =============================================================
+\section{Three Instances: TopSP, Finite Element EM, Brillouin Zone}\label{sec:three_instances}
+\input{sections/06_three_instances}
+
+% =============================================================
+% Section 7. Numerical Verification
+% =============================================================
+\section{Numerical Verification}\label{sec:numerical}
+\input{sections/07_numerical}
+
+% =============================================================
+% Section 8. Discussion and Future Work
+% =============================================================
+\section{Discussion and Open Problems}\label{sec:discussion}
+\input{sections/08_discussion}
+
+% =============================================================
+% Bibliography
+% =============================================================
+\bibliographystyle{amsalpha}
+\bibliography{bib/refs}
+
+\end{document}

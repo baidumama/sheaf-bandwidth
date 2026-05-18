@@ -1,0 +1,698 @@
+% =============================================================
+% Section 5. Sheaf Bandwidth: A Categorically Intrinsic Definition
+%
+% Core technical chapter.
+% =============================================================
+
+% --- Opening hook (continuing from Section 4) ---
+Building on the FEEC machinery of \cref{sec:feec_review}, we now
+construct the missing piece: a categorically intrinsic candidate for
+sheaf bandwidth, prove its invariance under unitary equivalence, and
+establish a strict identity reducing it to a singular value ratio on
+a canonical abstract sampling cell complex. The construction
+answers clauses~\textup{(R1)} and~\textup{(R2)} of
+\cref{subsec:tri-narrowing}: the definition refers only to the
+cellular-sheaf data of $\mathscr{A}$
+(\cref{def:sheafBW,prop:sheafBW-unitary}), and on the sampling sheaf
+$\samps$ it agrees with $\sigma_{\min}(A)/\sigma_{\max}(A)$
+strictly (\cref{thm:strict-equality}). Throughout this section all
+stalks are finite dimensional; the infinite-dimensional extension
+is outside the scope of this paper, in line with limitation~(L1) of
+\cref{subsec:tri-edge}.
+
+% =============================================================
+\subsection{Key design choice: $\sheafBW := \sqrt{\gamma_+ / \Gamma_+}$}\label{subsec:sheafbw-design}
+% =============================================================
+
+The candidate of \cref{def:sheafbw-candidate} expressed sheaf
+bandwidth via the basis-dependent quantity
+$\sigma_{\min}(A)/\sigma_{\max}(A)$. We introduce a categorically
+intrinsic alternative, formulated as a normalized spectral-gap
+ratio of the sheaf coboundary.
+
+\begin{definition}[Sheaf bandwidth]\label{def:sheafBW}
+Let $\mathscr{A}$ be a finite-dimensional cellular sheaf of Hilbert
+spaces on a finite regular cell complex $X$
+(\cref{def:finite-dim-sheaf} below), and let $\delta^0$ be the
+$0$-th coboundary of its cellular cochain complex
+(\cref{def:coboundary}). The \emph{sheaf bandwidth} of
+$\mathscr{A}$ is
+\begin{equation}\label{eq:sheafBW-def}
+  \sheafBW(\mathscr{A}) \;:=\;
+  \sqrt{\frac{\gamma_+(\delta^0)}{\Gamma_+(\delta^0)}}
+  \;\in\; [0, 1],
+\end{equation}
+where $\gamma_+(\delta^0)$ and $\Gamma_+(\delta^0)$ are the
+infimum of the positive part of the spectrum and the supremum of
+the spectrum of $(\delta^0)^* \delta^0$, defined formally in
+\cref{def:spectral-gap}. By convention,
+$\sheafBW(\mathscr{A}) := 0$ when $\delta^0 \equiv 0$ (the
+degenerate case in which $\mathscr{A}$ has no coboundary action;
+the zero map yields zero conditioning).
+\end{definition}
+
+The choice of \cref{eq:sheafBW-def} is governed by three
+considerations.
+
+\paragraph{(a) Square root.}
+$\gamma_+$ and $\Gamma_+$ are squared singular values of
+$\delta^0$. On the sampling sheaf $\samps$ of
+\cref{def:sampling-sheaf} below,
+$\gamma_+(\delta^0) = \sigma_{\min}(A)^2$ and
+$\Gamma_+(\delta^0) = \sigma_{\max}(A)^2$
+(\cref{thm:strict-equality}); the square root produces a
+length-scale ratio rather than an area ratio, aligning the bandwidth
+with the dimensionless conditioning $\sigma_{\min}/\sigma_{\max}$
+that frame theory takes as the standard frame-bound ratio.
+
+\paragraph{(b) Ratio.}
+The ratio is scale invariant: global rescaling
+$\mathscr{A}' = c \cdot \mathscr{A}$ by a single scalar
+$c \in \mathbb{R} \setminus \{0\}$ applied to every stalk leaves
+$\gamma_+ / \Gamma_+$ unchanged, so
+$\sheafBW(\mathscr{A}') = \sheafBW(\mathscr{A})$. This is the
+categorical requirement that bandwidth distinguish cellular sheaves
+up to an overall scalar.
+
+\paragraph{(c) Numerator and denominator.}
+The numerator $\gamma_+$ measures the smallest non-trivial action
+of $\delta^0$, increasing with well-conditioned sheaves; the
+denominator $\Gamma_+$ normalizes the result to $[0, 1]$. The
+maximally well-conditioned case ($\sheafBW = 1$) corresponds to
+$\delta^0$ proportional to a partial isometry on
+$(\ker \delta^0)^\perp$. On the sampling sheaf $\samps$ under
+the hypothesis $H^0(\samps) = 0$ of \cref{thm:strict-equality},
+$(\ker \delta^0)^\perp = V_B$ and this reduces to $A$ being a
+positive scalar multiple of an isometry on $V_B$
+(cf.\ \cref{thm:strict-equality}).
+
+\Cref{tab:sheafbw-comparison} positions \cref{def:sheafBW} alongside
+the spectral-gap measure of Hansen and Ghrist
+\cite{HansenGhrist2019} and the Galerkin singular value spectrum of
+Lahtinen and Stenvall \cite{LahtinenStenvall2020}.
+
+\begin{table}[h]
+  \centering
+  \small
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    Quantity & Form & Range / dimension \\
+    \midrule
+    $\sheafBW(\mathscr{A})$ (this paper) &
+       $\sqrt{\gamma_+(\delta^0)/\Gamma_+(\delta^0)}$ &
+       dimensionless, $[0, 1]$ \\
+    Sheaf spectral gap \cite{HansenGhrist2019} &
+       $\inf \spec(L^k) \cap (0, \infty)$ &
+       absolute, $(0, \infty)$ \\
+    Galerkin singular spectrum \cite{LahtinenStenvall2020} &
+       $\spec(\delta^* \delta)^{1/2}$ &
+       set-valued, singular values \\
+    Frame bound ratio (frame theory) &
+       $A/B$ on $V_B$ &
+       dimensionless, $[0, 1]$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{Comparison of \cref{def:sheafBW} with related
+    quantities. The sheaf bandwidth coincides with the frame-bound
+    ratio of frame theory and is the dimensionless normalization of
+    the spectral gap of \cite{HansenGhrist2019}.}\label{tab:sheafbw-comparison}
+\end{table}
+
+The remainder of this section makes \cref{def:sheafBW} formally
+precise, proves its unitary invariance, and reduces it to
+$\sigma_{\min}(A)/\sigma_{\max}(A)$ on a canonical sampling sheaf.
+
+% =============================================================
+\subsection{Sheaf Laplacian and spectral gap}\label{subsec:sheafbw-spectral-gap}
+% =============================================================
+
+We make precise the spectral quantities entering \cref{def:sheafBW}.
+
+\begin{definition}[Sheaf Laplacian; cf.\ {\cite[\S 3]{HansenGhrist2019}},
+\cite{AFW2010}]\label{def:sheaf-laplacian}
+For a finite-dimensional cellular sheaf $\mathscr{A}$ on a finite
+regular cell complex $X$, with cochain complex
+$(C^\bullet(\mathscr{A}), \delta^\bullet)$ of
+\cref{def:cochain-space,def:coboundary} below, the \emph{sheaf
+Laplacian} of degree $k$ is
+\[
+  L^k(\mathscr{A}) \;:=\; \delta^{k-1} (\delta^{k-1})^*
+  + (\delta^k)^* \delta^k
+  \;:\;
+  C^k(\mathscr{A}) \longrightarrow C^k(\mathscr{A}),
+\]
+with $\delta^{-1} := 0$. By \cref{thm:closed-hilbert-complex},
+$L^k(\mathscr{A})$ is a finite-dimensional self-adjoint positive
+operator.
+\end{definition}
+
+\begin{definition}[Spectral gap]\label{def:spectral-gap}
+For $\mathscr{A}$ as in \cref{def:sheaf-laplacian} and any $k$ for
+which $\delta^k \ne 0$,
+\begin{align*}
+  \gamma_+(\delta^k) &\;:=\;
+    \inf\{\, \lambda \in \spec((\delta^k)^* \delta^k) :
+              \lambda > 0 \,\}, \\
+  \Gamma_+(\delta^k) &\;:=\;
+    \sup \spec((\delta^k)^* \delta^k)
+    \;=\; \lVert \delta^k \rVert_{\mathrm{op}}^2.
+\end{align*}
+When $\delta^k = 0$ the positive part of
+$\spec((\delta^k)^* \delta^k)$ is empty and $\gamma_+(\delta^k)$ is
+left undefined; the degenerate case is handled directly by the
+convention in \cref{def:sheafBW}.
+\end{definition}
+
+\begin{lemma}[Well-definedness]\label{lem:gap-well-defined}
+The quantities $\gamma_+(\delta^k)$ and $\Gamma_+(\delta^k)$ depend
+only on the categorical data of $\mathscr{A}$ (stalks and
+restriction maps); they are independent of any choice of basis on
+the stalks.
+\end{lemma}
+
+\begin{proof}
+The operator $(\delta^k)^* \delta^k$ is self-adjoint and positive on
+the finite-dimensional Hilbert space $C^k(\mathscr{A})$. Since
+$C^k(\mathscr{A})$ is finite-dimensional, the spectrum coincides with
+the eigenvalue set of the matrix representation in any orthonormal
+basis \cite[\S VI.1, \S VII.1]{ReedSimonI}, and this eigenvalue set is
+invariant under unitary change of basis. Since the inner product on
+$C^k(\mathscr{A})$ is determined stalk-wise by the Hilbert structure
+on each $\mathscr{A}(\sigma)$ (and not by a chosen basis), the
+spectrum---and hence $\gamma_+, \Gamma_+$---is determined by the
+sheaf data alone.
+\end{proof}
+
+% =============================================================
+\subsection{Unitary invariance}\label{subsec:sheafbw-unitary}
+% =============================================================
+
+The categorical-intrinsicness clause of \cref{lem:gap-well-defined}
+extends to invariance under unitary equivalence in the category of
+cellular sheaves of Hilbert spaces.
+
+\begin{proposition}[Unitary invariance of $\sheafBW$]\label{prop:sheafBW-unitary}\footnote{Formalized in Lean 4 as \texttt{sheafBW\_eq} in \texttt{lean/MRI/Cellular/Unitary.lean}. The Lean statement proves the stalk-wise unitary-morphism core on the project formalization's \texttt{Complex1D} cellular-sheaf structure for $\delta^0$; the broader categorical packaging of finite regular cell complexes is kept informal in \cref{subsec:sheafbw-unitary-subcat}. Full correspondence: \texttt{lean/CROSSREF.md}.}
+Let $\mathscr{A}, \mathscr{A}'$ be finite-dimensional cellular
+sheaves of Hilbert spaces on $X$, and suppose there exists a
+\emph{unitary} sheaf morphism $\Phi : \mathscr{A} \to \mathscr{A}'$,
+i.e., a family of stalk-wise unitaries
+$\Phi_\sigma : \mathscr{A}(\sigma) \to \mathscr{A}'(\sigma)$
+satisfying the cellular-sheaf compatibility
+$\Phi_\tau \circ \mathscr{A}(\sigma \le \tau) =
+\mathscr{A}'(\sigma \le \tau) \circ \Phi_\sigma$ for every $\sigma
+\le \tau$. Then
+\begin{equation}\label{eq:sheafBW-unitary}
+  \sheafBW(\mathscr{A}) \;=\; \sheafBW(\mathscr{A}').
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The family $\{\Phi_\sigma\}$ assembles into a unitary operator
+$U : C^\bullet(\mathscr{A}) \to C^\bullet(\mathscr{A}')$ (a
+direct sum of stalk-wise unitaries is unitary on the Hilbert direct
+sum). The compatibility relation
+$\Phi_\tau \circ \mathscr{A}(\sigma \le \tau) =
+\mathscr{A}'(\sigma \le \tau) \circ \Phi_\sigma$ implies
+$U \circ \delta^k_{\mathscr{A}} = \delta^k_{\mathscr{A}'} \circ U$ on
+each $C^k$. Taking adjoints,
+$U \circ (\delta^k_{\mathscr{A}})^* (\delta^k_{\mathscr{A}}) \circ U^* =
+(\delta^k_{\mathscr{A}'})^* (\delta^k_{\mathscr{A}'})$ on
+$C^k(\mathscr{A}')$. Unitary conjugation preserves the spectrum
+\cite[\S VI.1]{ReedSimonI}, so
+$\gamma_+(\delta^k_{\mathscr{A}}) =
+\gamma_+(\delta^k_{\mathscr{A}'})$ and
+$\Gamma_+(\delta^k_{\mathscr{A}}) =
+\Gamma_+(\delta^k_{\mathscr{A}'})$ for every $k$, whence
+\cref{eq:sheafBW-unitary}.
+\end{proof}
+
+\begin{remark}[Extent of invariance]\label{rem:sheafbw-extent}
+\Cref{prop:sheafBW-unitary} establishes invariance under the
+\emph{unitary subcategory} of cellular sheaves of Hilbert spaces
+(\cref{def:unitary-subcat}). Whether the invariance extends to a
+non-trivial dagger structure on the full category is recorded as an
+independent open problem (\cref{op:non-trivial-dagger}).
+\end{remark}
+
+% =============================================================
+\subsection{Closed Hilbert complex structure}\label{subsec:sheafbw-hilbert-complex}
+% =============================================================
+
+We now record the structural ingredients required by
+\cref{def:sheaf-laplacian,def:spectral-gap}: the cellular cochain
+complex of a finite-dimensional cellular sheaf is a closed Hilbert
+complex in the sense of \cref{def:afw-hilbert-complex}.
+
+\begin{definition}[Finite-dimensional cellular sheaf of Hilbert
+  spaces; cf.\ {\cite[\S 2, Def.~4]{HansenGhrist2019}},
+  \cite{Robinson2014}]\label{def:finite-dim-sheaf}
+Let $X$ be a finite regular cell complex with face poset
+$(P_X, \le)$. A \emph{finite-dimensional cellular sheaf of Hilbert
+spaces} $\mathscr{A}$ on $X$ assigns
+\begin{enumerate}[label=(\alph*)]
+  \item to each cell $\sigma \in P_X$, a finite-dimensional Hilbert
+        space $\mathscr{A}(\sigma)$;
+  \item to each $\sigma \le \tau$ in $P_X$, a linear operator
+        $\mathscr{A}(\sigma \le \tau) :
+        \mathscr{A}(\sigma) \to \mathscr{A}(\tau)$ (automatically
+        bounded, by finite-dimensionality \cite[\S III.5]{ReedSimonI});
+\end{enumerate}
+satisfying the functoriality $\mathscr{A}(\sigma \le \rho) =
+\mathscr{A}(\tau \le \rho) \circ \mathscr{A}(\sigma \le \tau)$ for
+$\sigma \le \tau \le \rho$.
+\end{definition}
+
+\begin{definition}[Cochain spaces and coboundary]\label{def:cochain-space}
+For $\mathscr{A}$ as in \cref{def:finite-dim-sheaf}, the
+\emph{cochain spaces} are
+\[
+  C^k(\mathscr{A}) \;:=\;
+  \bigoplus_{\substack{\sigma \in P_X \\ \dim \sigma = k}}
+  \mathscr{A}(\sigma),
+\]
+the Hilbert direct sums of the stalks of dimension $k$.
+\end{definition}
+
+\begin{definition}[Coboundary]\label{def:coboundary}
+For $\mathscr{A}$ as in \cref{def:finite-dim-sheaf}, the
+\emph{coboundary} $\delta^k : C^k(\mathscr{A}) \to C^{k+1}(\mathscr{A})$
+is defined by
+\[
+  (\delta^k c)(\tau) \;:=\;
+  \sum_{\substack{\sigma : \dim \sigma = k \\ \sigma < \tau}}
+  [\sigma : \tau] \cdot \mathscr{A}(\sigma \le \tau)\!\left(c(\sigma)\right),
+\]
+for $c \in C^k(\mathscr{A})$ and $\tau$ a $(k+1)$-cell, where
+$[\sigma : \tau] \in \{\pm 1\}$ are the incidence coefficients of
+the oriented cell complex (see \cite[\S 2.1]{Hatcher2002}).
+\end{definition}
+
+\begin{theorem}[Closed Hilbert complex; cf.\ {\cite[\S 3.1.3]{AFW2010}}]
+\label{thm:closed-hilbert-complex}\footnote{Formalized in Lean 4 at the \texttt{Complex1D} / $\delta^0$ layer: \texttt{coboundaryHilbert\_range\_isClosed} in \texttt{lean/MRI/Cellular/HilbertComplex.lean} proves condition (d), range closedness. Conditions (a)--(b) are finite-dimensional auto-derivations and condition (c) is vacuous in the one-dimensional complex used by the formalization; the all-$k$ finite-regular-cell-complex statement is not packaged as one Lean theorem. Full correspondence: \texttt{lean/CROSSREF.md}.}
+For $\mathscr{A}$ a finite-dimensional cellular sheaf of Hilbert
+spaces on a finite regular cell complex, the cochain complex
+$(C^\bullet(\mathscr{A}), \delta^\bullet)$ is a closed Hilbert
+complex in the sense of \cref{def:afw-hilbert-complex}: each
+$C^k(\mathscr{A})$ is a finite-dimensional Hilbert space; each
+$\delta^k$ is a bounded linear operator; $\delta^{k+1} \circ \delta^k = 0$;
+and each $\mathrm{range}(\delta^k)$ is closed in $C^{k+1}(\mathscr{A})$.
+\end{theorem}
+
+\begin{proof}
+Each $C^k(\mathscr{A})$ is a finite Hilbert direct sum of
+finite-dimensional Hilbert spaces and is therefore a
+finite-dimensional Hilbert space. Each $\delta^k$ is a linear
+operator between finite-dimensional Hilbert spaces and is
+automatically bounded \cite[\S III.5]{ReedSimonI}. The condition
+$\delta^{k+1} \circ \delta^k = 0$ follows from the standard
+incidence identity
+$\sum_{\tau : \sigma < \tau < \rho} [\sigma : \tau][\tau : \rho] = 0$
+\cite[\S 2.1]{Hatcher2002}. Range closedness is immediate: any
+subspace of a finite-dimensional Hilbert space is closed.
+\end{proof}
+
+\begin{lemma}[Spectral form of $L^0$]\label{lem:L0-spectrum}\footnote{Formalized in Lean 4: the substantive operator claims correspond to three separate Lean theorems in \texttt{lean/MRI/Cellular/HilbertComplex.lean}: \texttt{sheafLaplacian0\_isSymmetric}, \texttt{sheafLaplacian0\_isPositive}, and \texttt{sheafLaplacian0\_ker\_eq}. The finite-spectrum and norm-bound consequences are standard finite-dimensional/self-adjoint/positive-operator facts supplied by mathlib rather than separate project theorems. Full correspondence: \texttt{lean/CROSSREF.md}.}
+For $\mathscr{A}$ as in \cref{def:finite-dim-sheaf},
+$L^0(\mathscr{A}) = (\delta^0)^* \delta^0$ is a self-adjoint
+positive operator on $C^0(\mathscr{A})$. Its spectrum is finite,
+$\spec(L^0(\mathscr{A})) \subset [0, \lVert \delta^0 \rVert_{\mathrm{op}}^2]$,
+and $\ker L^0(\mathscr{A}) = \ker \delta^0 = H^0(\mathscr{A})$.
+\end{lemma}
+
+\begin{proof}
+Self-adjointness and positivity follow from the form
+$T^* T$ for any operator $T$. Finiteness of the spectrum follows
+from finite-dimensionality. The kernel identity is the standard
+fact that $\ker(T^* T) = \ker T$ on a Hilbert space.
+\end{proof}
+
+% =============================================================
+\subsection{Abstract sampling cell complex and sampling sheaf}\label{subsec:sheafBW-Xsamp}
+% =============================================================
+
+The reduction of \cref{def:sheafBW} to
+$\sigma_{\min}(A)/\sigma_{\max}(A)$ on a sampling instance requires
+a cellular complex on which the sampling operator $A$ of
+\cref{eq:A-def} arises as the coboundary $\delta^0$. We construct
+this abstract complex and the associated sheaf, and verify that the
+construction lands in the cellular-sheaf framework of
+\cite{HansenGhrist2019,Robinson2014}.
+
+\begin{definition}[Abstract sampling cell complex]\label{def:Xsamp}
+Let $V_s = \{i_1, \ldots, i_M\}$. The \emph{abstract sampling cell
+complex} $X^A$ is the finite regular cell complex with
+\begin{itemize}[leftmargin=2em]
+  \item two $0$-cells, $\sigma_B$ and $\sigma_\infty$;
+  \item $M$ one-cells $\tau_1, \ldots, \tau_M$, with each $\tau_i$
+        having boundary $\partial \tau_i = \{\sigma_B, \sigma_\infty\}$;
+  \item incidence coefficients
+        $[\sigma_B : \tau_i] = +1$, $[\sigma_\infty : \tau_i] = -1$
+        (\cite[\S 2.1]{Hatcher2002}, with each $\tau_i$ oriented
+        from $\sigma_B$ to $\sigma_\infty$).
+\end{itemize}
+The cell $\sigma_B$ is the \emph{principal $0$-cell}; the cell
+$\sigma_\infty$ is an \emph{auxiliary basepoint} with no physical
+content---its presence ensures that each $\tau_i$ has two distinct
+endpoints, the regularity condition required by
+\cref{rem:Xsamp-regularity} below.
+\end{definition}
+
+\begin{remark}[Regularity verification]\label{rem:Xsamp-regularity}
+$X^A$ satisfies the regular cell complex conditions of
+\cite[\S 2, Def.~1]{HansenGhrist2019}, requiring for each cell of
+dimension $n_\alpha$ a homeomorphism of a closed ball in
+$\mathbb{R}^{n_\alpha}$ onto the closed cell, mapping the open ball
+homeomorphically onto the cell. Each $0$-cell is a single point,
+which is the closed unit ball in $\mathbb{R}^0$ and satisfies the
+condition trivially. For each $1$-cell $\tau_i$, the closed unit
+ball in $\mathbb{R}^1$ is the interval $[0,1]$, whose boundary
+$S^0 = \{0, 1\}$ must map to two \emph{distinct} $0$-cells of $X^A$;
+the assignment $0 \mapsto \sigma_B$, $1 \mapsto \sigma_\infty$
+realizes the required homeomorphism. The double $0$-cell construction
+is what verifies \emph{Cond.~4} of \cite[\S 2, Def.~1]{HansenGhrist2019}
+(boundaries of $1$-cells must consist of two distinct $0$-cells);
+Cond.~(1)--(3) hold automatically by the cell-complex setup of
+\cref{def:Xsamp}. Functoriality is vacuous on a $1$-dimensional cell
+complex (there are no chains of three distinct cells with strict
+inclusions). Hence $X^A$ is a regular cell complex in the sense of
+\cite[\S 2, Def.~1, Cond.~4]{HansenGhrist2019}.
+\end{remark}
+
+\begin{definition}[Sampling sheaf]\label{def:sampling-sheaf}
+The \emph{sampling sheaf} $\samps$ on $X^A$ is the cellular sheaf
+defined by
+\begin{itemize}[leftmargin=2em]
+  \item $\samps(\sigma_B) := V_B$ (with the inner product inherited
+        from $\C^N$);
+  \item $\samps(\sigma_\infty) := 0$ (the zero Hilbert space);
+  \item $\samps(\tau_i) := \C$ for each $i \in V_s$;
+  \item the restriction maps are
+        $\samps(\sigma_B \le \tau_i) := \eval_i$, where
+        $\eval_i : V_B \to \C$, $c \mapsto c_i$, is evaluation at the
+        $i$-th index, and
+        $\samps(\sigma_\infty \le \tau_i) := 0$, the unique linear
+        map from the zero space to $\C$.
+\end{itemize}
+\end{definition}
+
+\begin{remark}[Cellular-sheaf framework]\label{rem:samps-cellular}
+$\samps$ satisfies the cellular sheaf axioms of
+\cite[\S 2, Def.~4]{HansenGhrist2019}: each stalk is a
+finite-dimensional Hilbert space (the zero space being the zero
+object of $\Hilb^{\fin}$, the category of finite-dimensional
+Hilbert spaces); each restriction map is a bounded linear operator
+between finite-dimensional Hilbert spaces; functoriality is vacuous
+since $X^A$ has no chains of three distinct cells with strict
+inclusions.
+\end{remark}
+
+\begin{lemma}[Canonical isometry $V_B \oplus 0 \cong V_B$]\label{lem:canonical-isometry}
+The Hilbert direct sum $V_B \oplus \{0\} = \{(c, 0) : c \in V_B\}$
+is canonically isometric to $V_B$ via the projection
+$\pi_B(c, 0) := c$, with inverse $\iota_B(c) := (c, 0)$. Both maps
+are isometries:
+$\lVert (c, 0) \rVert^2_{V_B \oplus 0} = \lVert c \rVert^2_{V_B}$
+\cite[\S II.1]{ReedSimonI}.
+\end{lemma}
+
+\begin{lemma}[Cochain spaces of $\samps$]\label{lem:samps-cochain-spaces}
+For $\samps$ as in \cref{def:sampling-sheaf},
+\[
+  C^0(\samps) \;=\; V_B \oplus \{0\} \;\cong\; V_B
+  \qquad \text{and} \qquad
+  C^1(\samps) \;=\; \bigoplus_{i \in V_s} \C \;\cong\; \C^M,
+\]
+the first isomorphism being the canonical isometry of
+\cref{lem:canonical-isometry}.
+\end{lemma}
+
+\begin{proof}
+$C^0(\samps)$ is the direct sum of the stalks on $0$-cells:
+$\samps(\sigma_B) \oplus \samps(\sigma_\infty) = V_B \oplus 0$, and
+\cref{lem:canonical-isometry} provides the canonical isometry to
+$V_B$. $C^1(\samps)$ is the direct sum of the stalks on $1$-cells,
+each a copy of $\C$, indexed by $V_s$.
+\end{proof}
+
+\begin{proposition}[Coboundary equals sampling operator]\label{prop:delta-equals-A}\footnote{Formalized in Lean 4 by two statements in \texttt{lean/MRI/Cellular/Sampling.lean}: \texttt{coboundary\_eq\_sampling\_op} proves the operator-layer equality after the canonical map $E \to V_B \oplus 0$, and \texttt{coboundaryHilbert\_eq\_samplingOpEuclidean} proves the Hilbert-layer/PiLp version used for singular values. Full correspondence: \texttt{lean/CROSSREF.md}.}
+Under the canonical isometry of
+\cref{lem:canonical-isometry,lem:samps-cochain-spaces}, the
+coboundary $\delta^0 : C^0(\samps) \to C^1(\samps)$ of $\samps$
+agrees with the sampling operator $A : V_B \to \C^M$ of
+\cref{eq:A-def}:
+\begin{equation}\label{eq:delta0-equals-A}
+  \delta^0 \;=\; A \qquad
+  \text{as linear maps, after the canonical identification of
+        \cref{lem:canonical-isometry,lem:samps-cochain-spaces}.}
+\end{equation}
+The identification is canonical (uniquely determined by the
+sheaf data), so no choice is involved in the comparison.
+\end{proposition}
+
+\begin{proof}
+By \cref{def:coboundary,def:sampling-sheaf}, for $(c, 0) \in V_B \oplus 0$,
+\begin{align*}
+  \bigl(\delta^0 (c, 0)\bigr)(\tau_i)
+  &= [\sigma_B : \tau_i] \cdot \samps(\sigma_B \le \tau_i)(c)
+   + [\sigma_\infty : \tau_i] \cdot \samps(\sigma_\infty \le \tau_i)(0) \\
+  &= (+1) \cdot \eval_i(c) + (-1) \cdot 0 \\
+  &= c_i
+\end{align*}
+for each $i \in V_s$. Stacking over $i \in V_s$,
+$\delta^0 (c, 0) = (c_{i_1}, \ldots, c_{i_M}) = A c$. Composing with
+the canonical isometry of \cref{lem:canonical-isometry} (which is
+itself an isometry, hence does not change operator norms or
+spectra), $\delta^0 = A$ holds as linear maps after the canonical
+identification.
+\end{proof}
+
+% =============================================================
+\subsection{Strict equality on the sampling sheaf}\label{subsec:sheafbw-strict-equality}
+% =============================================================
+
+The reduction of \cref{def:sheafBW} on the sampling sheaf is now a
+direct consequence of \cref{prop:delta-equals-A}.
+
+\begin{theorem}[Strict equality]\label{thm:strict-equality}\footnote{Formalized in Lean 4: the paper's full-column-rank form corresponds to \texttt{strict\_equality\_full\_rank} in \texttt{lean/MRI/Cellular/SamplingSpectral.lean} (the equality $\sheafBW(\samps) = \sigma_{\min}(A)/\sigma_{\max}(A)$ with domain-last $\sigma_{\min}$ and the interval $(0,1]$); the upper-boundary iff corresponds to \texttt{sheafBW\_Samps\_eq\_one\_iff\_singularValues\_domain\_eq}. The helper \texttt{strict\_equality} proves the more general positive-spectrum version indexed by \texttt{finrank (range A) - 1}. The further geometric interpretation ``iff $A$ is a positive scalar multiple of an isometry on $V_B$'' is a corollary of $\sigma_{\min}(A) = \sigma_{\max}(A)$ derived in the proof body below and is not separately formalized as a Lean theorem. Full correspondence: \texttt{lean/CROSSREF.md}.}
+Let $V$, $V_s$, $B$ be as in \cref{subsec:tri-setup} (and hence
+$V_B = V_B(V) \subset \C^N$ and $A : V_B \to \C^M$ as in
+\cref{eq:A-def}). Assume $A$ has full column rank, equivalently
+$\sigma_{\min}(A) > 0$, equivalently $H^0(\samps) = 0$ (the three
+formulations are mutually equivalent by \cref{cor:H0-vanishing}).
+For the sampling sheaf $\samps$ on the abstract sampling cell
+complex $X^A$ of \cref{def:Xsamp,def:sampling-sheaf},
+\begin{equation}\label{eq:strict-equality}
+  \sheafBW(\samps) \;=\; \frac{\sigma_{\min}(A)}{\sigma_{\max}(A)}
+  \;\in\; (0, 1].
+\end{equation}
+The upper boundary $\sheafBW(\samps) = 1$ is attained iff
+$\sigma_{\min}(A) = \sigma_{\max}(A)$, i.e., iff $A$ is a positive
+scalar multiple of an isometry on $V_B$ (cf.\ design clause~(c) of
+\cref{def:sheafBW}).
+\end{theorem}
+
+\begin{proof}
+By \cref{prop:delta-equals-A},
+$\delta^0 = A$ as an operator $V_B \to \C^M$ (under the canonical
+isometry $C^0(\samps) \cong V_B$). The spectrum of
+$(\delta^0)^* \delta^0$ therefore equals the spectrum of $A^* A$,
+which is the set of squared singular values of $A$:
+$\spec(A^* A) = \{\sigma_l(A)^2\}_{l=0}^{K-1}$. Hence
+\begin{align*}
+  \gamma_+(\delta^0)
+  &= \inf\{\,\lambda \in \spec(A^* A) : \lambda > 0\,\}
+   = \sigma_{\min}(A)^2, \\
+  \Gamma_+(\delta^0)
+  &= \sup \spec(A^* A)
+   = \sigma_{\max}(A)^2.
+\end{align*}
+Substituting into \cref{eq:sheafBW-def},
+\[
+  \sheafBW(\samps)
+  \;=\; \sqrt{\frac{\gamma_+(\delta^0)}{\Gamma_+(\delta^0)}}
+  \;=\; \sqrt{\frac{\sigma_{\min}(A)^2}{\sigma_{\max}(A)^2}}
+  \;=\; \frac{\sigma_{\min}(A)}{\sigma_{\max}(A)},
+\]
+each equality being a strict equality of real numbers (no asymptotic
+or almost-equal qualification); the operator-level identification
+$\delta^0 = A$ used at the start of the proof is canonical
+(\cref{prop:delta-equals-A}).
+\end{proof}
+
+\begin{corollary}[$H^0$ vanishing on the sampling sheaf]\label{cor:H0-vanishing}\footnote{Formalized in Lean 4: the two statements of this corollary correspond to (i) \texttt{globalSections\_comap\_eq\_ker\_samplingOp} in \texttt{lean/MRI/Cellular/TriangleEquivalence.lean} (the equality $H^0(\samps) = \ker A$ expressed as a \texttt{Submodule.comap} via the canonical isometry); and (ii) \texttt{globalSections\_eq\_bot\_iff\_singularValues\_last\_pos} in the same file (the iff $H^0(\samps) = 0 \iff \sigma_{\min}(A) > 0$). The intermediate \texttt{H0\_vanishing\_iff} in \texttt{lean/MRI/Cellular/SamplingSpectral.lean} bridges to the \texttt{Injective} form. Full correspondence: \texttt{lean/CROSSREF.md}.}
+$H^0(\samps) = \ker A$. In particular, $H^0(\samps) = 0$ if and
+only if $\sigma_{\min}(A) > 0$.
+\end{corollary}
+
+\begin{proof}
+$H^0(\samps) = \ker \delta^0$ by the standard cellular-sheaf
+identification of $0$-cohomology with global sections; by
+\cref{prop:delta-equals-A}, $\ker \delta^0 = \ker A$, and
+$\ker A = 0$ iff $\sigma_{\min}(A) > 0$.
+\end{proof}
+
+\begin{remark}[Rank-deficient locus]\label{rem:rank-deficient-locus}
+When $\sigma_{\min}(A) = 0$ (equivalently $H^0(\samps) \ne 0$), the
+hypothesis of \cref{thm:strict-equality} fails and the two sides of
+\cref{eq:strict-equality} disagree: the candidate
+$\sheafBW^{\mathrm{cand}}(\samps)$ of
+\cref{def:sheafbw-candidate} is set to $0$ by convention, while the
+intrinsic invariant $\sheafBW(\samps) = \sqrt{\gamma_+(\delta^0) /
+\Gamma_+(\delta^0)}$ measures the spectral-gap ratio of $\delta^0$
+restricted to $(\ker \delta^0)^\perp$ and remains strictly positive
+whenever $\delta^0 \ne 0$ on $(\ker \delta^0)^\perp$. The two
+quantities encode different information on the rank-deficient locus:
+the candidate records by convention the failure of full sampling,
+the intrinsic invariant records the conditioning of $\delta^0$ on
+its non-trivial range. \Cref{thm:strict-equality} is the statement
+that on the well-conditioned locus $\sigma_{\min}(A) > 0$ the two
+quantities coincide strictly.
+\end{remark}
+
+\Cref{thm:strict-equality} answers clause~\textup{(R2)} of
+\cref{subsec:tri-narrowing} in the well-conditioned regime: the
+categorically intrinsic sheaf bandwidth of \cref{def:sheafBW}
+reduces to the conditioning ratio
+$\sigma_{\min}(A)/\sigma_{\max}(A)$ on the sampling sheaf with
+strict equality. \Cref{rem:rank-deficient-locus} delineates the
+rank-deficient boundary of the strict equality.
+
+% =============================================================
+\subsection{Unitary subcategory and dagger structure}\label{subsec:sheafbw-unitary-subcat}
+% =============================================================
+
+\Cref{prop:sheafBW-unitary} required the existence of a unitary
+sheaf morphism between $\mathscr{A}$ and $\mathscr{A}'$. We make
+the categorical setting explicit and identify its dagger structure.
+
+\begin{definition}[Unitary subcategory]\label{def:unitary-subcat}\footnote{Not formalized in Lean 4: the categorical packaging of the unitary subcategory awaits a fuller cellular-sheaf category in mathlib. The core stalk-wise unitary structure used in the invariance proposition above is captured by \texttt{UnitarySheafMorphism} in \texttt{lean/MRI/Cellular/Unitary.lean}; see \texttt{lean/CROSSREF.md}.}
+Let $X$ be a finite regular cell complex. The category
+$\CellSh^{\fin}_{\Hilb}(X)$ has finite-dimensional cellular sheaves
+of Hilbert spaces on $X$ as objects, and stalk-wise families of
+linear operators $\Phi = \{\Phi_\sigma\}_{\sigma \in P_X}$
+satisfying the cellular-sheaf compatibility as morphisms. Its
+\emph{unitary subcategory}, $\CellSh^{\fin}_{\Hilb,\mathrm{u}}(X)$,
+is the subcategory whose morphisms are those $\Phi$ with each
+$\Phi_\sigma$ a unitary operator.
+\end{definition}
+
+\begin{proposition}[Unitary subcategory is a groupoid]\label{prop:unitary-groupoid}\footnote{Not formalized in Lean 4; the groupoid/dagger structure on the unitary subcategory is left informal pending a fuller categorical formalization in mathlib. See \texttt{lean/CROSSREF.md}.}
+The category $\CellSh^{\fin}_{\Hilb,\mathrm{u}}(X)$ is a groupoid.
+On this subcategory the dagger functor
+$\Phi^\dagger := \{(\Phi_\sigma)^*\}_{\sigma \in P_X}$ coincides
+with the inverse functor: $\Phi^\dagger = \Phi^{-1}$.
+\end{proposition}
+
+\begin{proof}
+Let $\Phi : \mathscr{A} \to \mathscr{A}'$ be unitary, so each
+$\Phi_\sigma : \mathscr{A}(\sigma) \to \mathscr{A}'(\sigma)$ is a
+unitary operator on a finite-dimensional Hilbert space; in particular
+$\Phi_\sigma^{-1} = \Phi_\sigma^*$ \cite[\S VI.1]{ReedSimonI}. To
+show $\Phi$ is invertible in $\CellSh^{\fin}_{\Hilb,\mathrm{u}}(X)$,
+we verify that the family
+$\{\Phi_\sigma^{-1}\}_{\sigma \in P_X}$ defines a sheaf morphism.
+The sheaf morphism axiom for $\Phi$ reads
+$\Phi_\tau \circ \mathscr{A}(\sigma \le \tau) =
+\mathscr{A}'(\sigma \le \tau) \circ \Phi_\sigma$ for every
+$\sigma \le \tau$. Applying $\Phi_\tau^{-1}$ on the left and
+$\Phi_\sigma^{-1}$ on the right yields
+$\mathscr{A}(\sigma \le \tau) \circ \Phi_\sigma^{-1} =
+\Phi_\tau^{-1} \circ \mathscr{A}'(\sigma \le \tau)$, the sheaf
+morphism axiom for $\{\Phi_\sigma^{-1}\}$ in the opposite direction.
+Each $\Phi_\sigma^{-1}$ is unitary (inverse of a unitary is
+unitary), so $\Phi^{-1} \in \CellSh^{\fin}_{\Hilb,\mathrm{u}}(X)$.
+The identity $\Phi^\dagger_\sigma = \Phi_\sigma^* = \Phi_\sigma^{-1}$
+extends stalk-wise to $\Phi^\dagger = \Phi^{-1}$. The category is
+therefore a groupoid \cite[\S I.5]{MacLane1971}.
+\end{proof}
+
+\begin{remark}[Dagger structure on the unitary subcategory is
+trivial]\label{rem:trivial-dagger}
+On a groupoid the dagger functor of \cref{prop:unitary-groupoid}
+\emph{coincides} with the inverse functor; the dagger axioms of
+\cite[\S 2.3]{HeunenVicary2019} are then satisfied by the
+groupoid structure alone. This corresponds to the
+\emph{dagger-core} of a $\dagger$-category in the standard
+nomenclature: it is the maximal sub-groupoid on which dagger and
+inverse agree. The substantive content of dagger category
+theory---the distinction of dagger from inverse on non-isomorphism
+morphisms (isometries, partial isometries, dagger-monics,
+dagger-kernels)---is absent on the unitary subcategory by
+construction.
+\end{remark}
+
+% =============================================================
+\subsection{Open Problem: non-trivial dagger on the full category}\label{subsec:sheafbw-op}
+% =============================================================
+
+The trivial dagger structure on the unitary subcategory of
+\cref{rem:trivial-dagger} leaves open the question of whether a
+non-trivial dagger structure exists on the full category
+$\CellSh^{\fin}_{\Hilb}(X)$.
+
+\begin{openproblem}[Non-trivial dagger on $\CellSh^{\fin}_{\Hilb}(X)$]
+\label{op:non-trivial-dagger}
+Does there exist a contravariant involutive functor
+\[
+  \dagger \;:\; \CellSh^{\fin}_{\Hilb}(X)
+  \longrightarrow \CellSh^{\fin}_{\Hilb}(X)^{\mathrm{op}}
+\]
+satisfying the standard dagger-functor axioms of
+\cite[\S 2.3, 2.18--2.19]{HeunenVicary2019}, namely
+\begin{enumerate}[label=(D\arabic*)]
+  \item $\mathscr{A}^\dagger = \mathscr{A}$ for every object;
+  \item $(\mathrm{id}_{\mathscr{A}})^\dagger = \mathrm{id}_{\mathscr{A}}$;
+  \item $(\Phi \circ \Psi)^\dagger = \Psi^\dagger \circ \Phi^\dagger$;
+  \item $(\Phi^\dagger)^\dagger = \Phi$;
+\end{enumerate}
+that restricts on the unitary subcategory
+$\CellSh^{\fin}_{\Hilb,\mathrm{u}}(X)$ to the stalk-wise Hilbert
+adjoint of \cref{prop:unitary-groupoid}, and is moreover
+\emph{non-trivial} on non-unitary morphisms in the sense of
+distinguishing isometries from dagger-monics from arbitrary morphisms?
+\end{openproblem}
+
+The obstruction to a stalk-wise definition is recorded for context.
+On a non-unitary morphism $\Phi$, the stalk-wise Hilbert adjoints
+$\{(\Phi_\sigma)^*\}_{\sigma \in P_X}$ in general fail the cellular
+sheaf morphism axiom: starting from
+$\Phi_\tau \circ \mathscr{A}(\sigma \le \tau) =
+\mathscr{A}'(\sigma \le \tau) \circ \Phi_\sigma$ and taking adjoints
+yields
+$\mathscr{A}(\sigma \le \tau)^* \circ \Phi_\tau^* =
+\Phi_\sigma^* \circ \mathscr{A}'(\sigma \le \tau)^*$, which is the
+sheaf morphism axiom for the \emph{adjoint restriction maps}
+$\mathscr{A}(\sigma \le \tau)^*, \mathscr{A}'(\sigma \le \tau)^*$
+running in the opposite direction in the face poset. Without
+unitarity of restriction maps---in general absent in cellular
+sheaves of Hilbert spaces---the stalk-wise dagger fails to be a
+sheaf morphism. A non-trivial dagger functor on the full category
+must therefore use a non-stalk-wise extension, with no precedent in
+the cellular-sheaf literature: \cite{LahtinenStenvall2020} treats
+dagger structure on the category of finite element discretizations
+(distinct from cellular sheaves), and \cite{HansenGhrist2019}
+introduces the unitary subcategory but does not extend a dagger
+beyond it.
+
+\Cref{op:non-trivial-dagger} is independent of the main results of
+this paper. \Cref{prop:sheafBW-unitary,thm:strict-equality} hold
+under unitary equivalence in
+$\CellSh^{\fin}_{\Hilb,\mathrm{u}}(X)$, which is sufficient for the
+intrinsicness clause~\textup{(R1)} of \cref{subsec:tri-narrowing}
+in the form proven here. A non-trivial dagger on the full category
+would strengthen \cref{prop:sheafBW-unitary} to dagger invariance,
+but is not required for either the strict equality of
+\cref{thm:strict-equality} or for the three-instance instantiation
+of \cref{sec:three_instances}.
+
+% --- Closing hook (to Section 6) ---
+\Cref{def:sheafBW,prop:sheafBW-unitary,thm:strict-equality} answer
+clauses~\textup{(R1)} and~\textup{(R2)} of
+\cref{subsec:tri-narrowing}: the sheaf bandwidth is defined
+intrinsically from the cellular-sheaf data, is invariant under
+unitary equivalence, and reduces to $\sigma_{\min}(A)/\sigma_{\max}(A)$
+on the sampling sheaf $\samps$ with strict equality. To exhibit
+the framework's reach beyond the canonical sampling instance, we now
+apply it to three previously disjoint domains---signal processing on
+simplicial complexes, finite element electromagnetics, and Brillouin
+zone tetrahedron quadrature---unified by a common categorical template.

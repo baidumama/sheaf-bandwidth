@@ -1,0 +1,241 @@
+% =============================================================
+% Section 1. Introduction
+% Template: paper/v0.1/notes/narrative.md §4 §1
+% Structure: §1.1 Robinson open problem / §1.2 baseline black-box
+%            §1.3 FEEC × sheaf SP disconnect / §1.4 contributions / §1.5 outline
+% =============================================================
+
+% -------------------------------------------------------------
+\subsection{Robinson's open problem on sheaf bandwidth}\label{subsec:intro-robinson}
+
+Cellular sheaves of Hilbert spaces, as developed by
+\cite{Robinson2014} and refined in the spectral theory of
+\cite{HansenGhrist2019}, equip a regular cell complex $X$ with stalks
+$\mathscr{A}(\sigma)$ on each cell and bounded restriction maps along
+incidences. Robinson's monograph closes \cite[\S 6]{Robinson2014} with
+an explicit open question: does sheaf bandwidth admit a definition
+that is intrinsic to the sheaf, not merely to a chosen ambient
+representation? In our reading, the question splits into three sub-questions:
+\begin{enumerate}[leftmargin=*,label=(Q\arabic*)]
+\item \textbf{Categorical intrinsicness.} Is there a real-valued
+  invariant $\sheafBW(\mathscr{A})$, defined from the sheaf data alone
+  (stalks, restriction maps, sheaf Laplacian), that is preserved under
+  unitary equivalence in the ambient cellular sheaf category?
+\item \textbf{Spectral handle.} Does this invariant admit a closed
+  form on the spectrum of the sheaf Laplacian
+  $L^0 = (\delta^0)^* \delta^0$, comparable in tractability to the
+  singular value ratio $\sigma_{\min}/\sigma_{\max}$ of an ambient
+  matrix?
+\item \textbf{Concrete reduction.} On a canonical class of sheaves
+  arising from a sampling problem, does the intrinsic invariant
+  reduce \emph{strictly} (not just up to constants) to a
+  domain-specific singular value ratio?
+\end{enumerate}
+This paper answers all three affirmatively, in the
+finite-dimensional, spectral-gap, unitary-invariant version of the
+question as split here
+(\cref{def:sheafBW,prop:sheafBW-unitary,thm:strict-equality}), and
+exhibits the answer in three independent application domains
+(\cref{sec:three_instances}). The technical formulation in
+\cref{subsec:tri-narrowing} narrows these three sub-questions to a
+working two-clause specification, in which (\textup{Q2}) is absorbed
+into the spectral-gap form of \cref{def:sheafBW} itself. The
+infinite-dimensional extension and any categorical generalization
+beyond the present cellular-sheaf-of-finite-dimensional-Hilbert-spaces
+setting are explicitly out of scope; see \cref{subsec:tri-edge} for
+the four boundary conditions (L1)--(L4).
+
+% -------------------------------------------------------------
+\subsection{The black-box treatment of $k$-space sampling in MRI}\label{subsec:intro-mri-blackbox}
+
+Magnetic resonance imaging reconstruction by 2026 rests on four
+schools that treat the choice of sampling geometry as a black box
+upstream of reconstruction:
+\begin{itemize}[leftmargin=*]
+\item \emph{Compressed sensing} \cite{LustigDonohoPauly2007} treats
+  sampling as a fixed acquisition pattern and optimizes only the
+  reconstruction prior;
+\item \emph{Topological signal processing}
+  \cite{BarbarossaSardellitti2020} treats sampling on simplicial
+  complexes via Riesz frame inequalities, again with the geometry
+  given;
+\item \emph{Sparkling-style point process design}
+  \cite{LazarusEtAl2019Sparkling} treats sampling design as a
+  point-process optimization detached from the reconstruction
+  operator;
+\item \emph{Sheaf signal processing}
+  \cite{Robinson2014,HansenGhrist2019,HansenGhrist2019Allerton}
+  studies sheaf bandwidth as an analytic invariant without exposing a
+  computable reduction to acquisition-side singular values.
+\end{itemize}
+Each school is internally precise. None exposes a single scalar
+that is at once (i) intrinsic to the abstract sampling structure and
+(ii) directly computable from the acquisition matrix. We will refer
+to this gap as the \emph{sampling black box} and resolve it via the
+triangle equivalence of \cref{thm:triangle-equiv}.
+
+% -------------------------------------------------------------
+\subsection{The FEEC and cellular-sheaf disconnect}\label{subsec:intro-disconnect}
+
+Finite element exterior calculus (FEEC), as systematized by
+\cite{AFW2010,FalkWinther2014} on the algebraic side and by
+\cite{BochevHyman2006,Christiansen2010} on the construction side,
+provides closed Hilbert complex theory, Hodge decomposition with
+stalk-wise harmonic representatives, and bounded cochain projections
+of arbitrary commuting type. Cellular sheaf signal processing,
+beginning with \cite{Robinson2014}, develops cohomology and bandwidth
+on the same combinatorial substrate. Despite the shared substrate of
+cell complexes equipped with cochain spaces, the two literatures have
+not been merged in print: \cite{ChristiansenRapetti2025} surveys 30
+years of FEEC without referencing sheaf signal processing, and
+\cite{CerejeirasKahlerLegatiuk2025} surveys recent topological signal
+processing without invoking AFW Hilbert complexes. We attribute this
+to a missing concrete bridge---a single object on which the two
+machineries meet and produce the same scalar---which we supply via
+the abstract sampling cell complex $X^A$ of \cref{def:Xsamp}.
+
+% -------------------------------------------------------------
+\subsection{Contributions}\label{subsec:intro-contributions}
+
+The contributions of this paper are the following.
+
+\begin{enumerate}[leftmargin=*,label=(C\arabic*)]
+\item \textbf{Triangle Equivalence Theorem
+    (\cref{thm:triangle-equiv}).} Three formulations of well-conditioning
+  for $k$-space sampling---FEEC singular value bounds, topological
+  signal processing Riesz frame conditions, and Robinson sheaf
+  cohomology with sheaf bandwidth---are formally equivalent
+  \emph{under the common finite-dimensional sampling-operator normal
+  form} of \cref{subsec:tri-setup}; the equivalence is not claimed
+  to hold in the original infinite-dimensional or qualitative
+  settings of the three source literatures. The proof of the
+  equivalence is decomposed into a linear-algebraic part
+  $(a) \Leftrightarrow (b)$ (\cref{subsec:tri-ab}) and a
+  sheaf-cohomological part $(a) \Leftrightarrow (c)$
+  (\cref{subsec:tri-ac}).
+
+\item \textbf{Sheaf bandwidth, categorically intrinsic
+    (\cref{def:sheafBW,prop:sheafBW-unitary}).} The proposed invariant
+  $\sheafBW(\mathscr{A}) := \sqrt{\gamma_+(\delta^0)/\Gamma_+(\delta^0)}$
+  uses only the sheaf Laplacian spectral gap and is unitarily
+  invariant in the cellular sheaf category. This addresses
+  sub-questions (\textup{Q1}) and (\textup{Q2}) of
+  \cref{subsec:intro-robinson}.
+
+\item \textbf{Strict equality on the abstract sampling cell complex
+    (\cref{thm:strict-equality}).} On the canonical sampling sheaf
+  $\samps$ over the cell complex $X^A$
+  (\cref{def:Xsamp,def:sampling-sheaf}), constructed with a double
+  $0$-cell $\{\sigma_B, \sigma_\infty\}$ to satisfy the regularity
+  conditions of \cite[Def.~1, Cond.~4]{HansenGhrist2019}, the
+  intrinsic invariant reduces strictly to
+  $\sigma_{\min}(A)/\sigma_{\max}(A)$ on the well-conditioned locus
+  $\sigma_{\min}(A) > 0$ (equivalently $H^0(\samps) = 0$); the
+  rank-deficient boundary is recorded in
+  \cref{rem:rank-deficient-locus}. This addresses sub-question
+  (\textup{Q3}) of \cref{subsec:intro-robinson}.
+
+\item \textbf{Three-instance unification by a common categorical
+    template (\cref{sec:three_instances}).} Three previously disjoint
+  domains fit the same template
+  $V_? \subset \C^N$ + $A : V_? \to \C^M$:
+  topological signal processing
+  ($V_?  = V_B^{\TopSP}$, the bandlimited subspace),
+  finite element electromagnetics
+  ($V_?  = V_S^{\FEM}$, a finite-dimensional restriction of an AFW
+  conforming subspace), and Brillouin zone tetrahedron quadrature
+  ($V_?  = V_{\occ}^{\BZ}$, the Whitney $0$-form span over occupied
+  $k$-points; see \cref{subsec:6-bz} for scope).
+  \Cref{thm:strict-equality} applies verbatim in each.
+
+\item \textbf{Empirical proposition on sampling--integration
+    trade-off (\cref{empirical:8b}).} The sampling map $S$
+  (\cref{def:sampling-map}) and the integration map $I$
+  (\cref{def:integration-map}) trace a Pareto frontier under
+  geometry optimization: no admissible $V$ simultaneously maximizes
+  $S$ and minimizes $I$. The supporting evidence comprises two
+  empirical channels and a heuristic skeleton: a project-internal
+  numerical study on $35$ MRI sampling configurations with a
+  multi-$N$ multi-$K$ robustness stratification (\cref{sec:numerical});
+  five decades of Brillouin zone practice in condensed matter
+  \cite{Blochl1994,LehmannTaut1972,JepsenAndersen1971,MonkhorstPack1976},
+  on the integration side; and the Euclidean Fourier-spectrum
+  framework of \cite{Pilleboue2015}, contributing directional
+  content only rather than direct evidence on cellular-sheaf
+  integration.
+
+\item \textbf{Numerical verification of the strict equality
+    (\cref{sec:numerical}).} The strict equality of
+  \cref{thm:strict-equality} is verified across three toy operators
+  matching the common finite-dimensional template, with maximum
+  relative deviation $1.64 \times 10^{-14}$ (Instance~2; Instances~1
+  and~3 are within $8 \times 10^{-16}$). The deviation reflects the
+  expected roundoff amplification of comparing
+  $\sqrt{\lambda_{\min}(A^* A)/\lambda_{\max}(A^* A)}$ with
+  $\sigma_{\min}(A)/\sigma_{\max}(A)$ on conditioned matrices, since
+  $\kappa(A^* A) = \kappa(A)^2$. The verification is honest in scope:
+  it confirms the linear-algebraic identity and the code path, not the
+  underlying physical evidence per instance, which is recorded
+  separately in \cref{tab:7-evidence}.
+
+\item \textbf{Two independent open problems
+    (\cref{op:non-trivial-dagger,op:8b-rigor}).} The categorical
+  bridge constructed here leaves two precisely formulated open
+  questions: a non-trivial dagger structure on the full category
+  $\CellSh^{\fin}_{\Hilb}(X)$ extending the unitary-subcategory
+  groupoid (\cref{prop:unitary-groupoid}); and a constructive
+  Pareto-optimality proof upgrading \cref{empirical:8b} to a
+  theorem via compactness, convex relaxation, and spectral
+  duality.
+\end{enumerate}
+
+% -------------------------------------------------------------
+\subsection{Paper outline}\label{subsec:intro-outline}
+
+\Cref{sec:related} reviews the four schools whose tools we combine:
+finite element exterior calculus, cellular sheaf signal processing,
+topological signal processing, and dagger Galerkin theory.
+\Cref{sec:triangle} states and proves the triangle equivalence theorem
+and produces a candidate sheaf bandwidth that is not yet categorically
+intrinsic. \Cref{sec:feec_review} reviews the FEEC machinery
+(closed Hilbert complex, Hodge decomposition, bounded cochain
+projection) needed to lift bandwidth to a categorically intrinsic
+invariant, and presents a four-school comparison table.
+\Cref{sec:sheafbw} constructs the categorically intrinsic candidate
+$\sheafBW$, proves unitary invariance, builds the abstract sampling
+cell complex $X^A$ with its double $0$-cell, and establishes the
+strict equality \cref{thm:strict-equality}.
+\Cref{sec:three_instances} instantiates the framework in topological
+signal processing, finite element electromagnetics, and Brillouin
+zone quadrature, states the empirical proposition on the
+$S$--$I$ Pareto trade-off, and records the constructive Pareto
+proof as an independent open problem. \Cref{sec:numerical} verifies
+the strict equality numerically and states the scope of the
+verification. \Cref{sec:discussion} restates the seven contributions,
+discusses the two open problems, and outlines the engineering
+verification on the MRI side that lies outside this paper.
+
+\medskip\noindent
+The three motivating threads---Robinson's open question, the MRI
+black-box treatment of sampling, and the FEEC and cellular-sheaf
+disconnect---are addressed jointly by a single object on which all
+three meet. \Cref{sec:related} reviews the four schools whose
+tools we use, and \cref{sec:triangle} begins the construction with a
+triangle equivalence theorem.
+
+\paragraph{Formalization in Lean 4.}
+The main finite-dimensional operator/sheaf-core theorems, propositions,
+and corollaries of \cref{sec:triangle} and \cref{sec:sheafbw} are
+formalized in Lean 4 (mathlib \texttt{v4.30.0-rc2}) and machine-verified
+by the Lean kernel: \texttt{lake build} passes the entire library with
+\emph{0 sorry, 0 admitted, 0 warnings} (8326 build jobs). Each formalized
+result carries a footnote identifying the corresponding Lean file and
+theorem name(s). The category-theoretic subsection
+\cref{subsec:sheafbw-unitary-subcat} (i.e.,
+\cref{def:unitary-subcat,prop:unitary-groupoid}), the physical instances
+of \cref{sec:three_instances} (i.e.,
+\cref{def:sampling-map,def:integration-map} and \cref{empirical:8b}), and
+the geometric ``scalar multiple of isometry'' clause of
+\cref{thm:strict-equality} are \emph{not} formalized; each such statement
+carries an explicit ``Not formalized'' footnote at its declaration. The
+complete paper--Lean correspondence table is in \texttt{lean/CROSSREF.md}.

@@ -1,0 +1,119 @@
+% =============================================================
+% Section 2. Related Work
+% Template: paper/v0.1/notes/narrative.md §4 §2
+% Structure: §2.1 FEEC / §2.2 cellular sheaf SP / §2.3 TopSP / §2.4 dagger Galerkin
+% Key message: each school is precise; the four have not been combined.
+% =============================================================
+
+\noindent
+The technical work in this paper combines tools from four schools
+that have developed independently. Each school is internally precise;
+none has been combined with the others on a single concrete object
+producing a single scalar. We review the relevant results here so
+that later sections can cite them by tag.
+
+% -------------------------------------------------------------
+\subsection{Finite element exterior calculus}\label{subsec:related-feec}
+
+Finite element exterior calculus rests on three lines of
+construction. The reduction--reconstruction interface of
+\cite{BochevHyman2006} (with antecedents in
+\cite{Whitney1957,Bossavit1988}) defines a map
+$R : \Lambda^k(\Omega) \to C^k$ that integrates a smooth $k$-form
+over chains, and an inverse $I_W : C^k \to \Lambda^k$ that lifts
+chains to forms via Whitney shape functions; these two maps satisfy a
+commuting Stokes identity (\cref{prop:commuting-stokes}). The
+finite-element-system framework of \cite{Christiansen2010} packages
+these data abstractly: an FES is a contravariant functor on a
+category of cellular complexes, and Whitney forms are recovered as
+its canonical instance. The Hilbert complex framework of
+\cite{AFW2010,FalkWinther2014} (refining
+\cite{BruningLesch1992,AFW2006}) supplies the analytic core that we
+need: closed cochain complexes of Hilbert spaces, Hodge decomposition
+with stalk-wise harmonic representatives, and bounded cochain
+projections $\pi_h$ commuting with the differential up to a fixed
+constant. The recent survey of \cite{ChristiansenRapetti2025}
+collates 30 years of FEEC development and is one of our two anchors
+for placing FEEC tools relative to the topological-signal-processing
+literature.
+
+% -------------------------------------------------------------
+\subsection{Cellular sheaves and sheaf signal processing}\label{subsec:related-sheafsp}
+
+Cellular sheaves of vector spaces, with cohomology computed by a
+chain complex on a regular cell complex, are surveyed in
+\cite[\S 6]{Robinson2014}. Robinson defines sheaf bandwidth as a
+real-valued analytic invariant and closes the chapter with the open
+question on its categorically intrinsic formulation that motivates
+the present paper. An earlier sheaf-theoretic perspective on
+sampling, complementary in topic to the bandwidth question studied
+here, appears in \cite{Robinson2014Sampling}; the abstract sampling
+cell complex $X^A$ and the strict-equality construction of
+\cref{thm:strict-equality} are independent of that work, supplying a
+specific finite-dimensional sampling sheaf on which Robinson's open
+question admits a concrete spectral resolution. The spectral theory of cellular sheaf Laplacians
+$L^k = (\delta^k)^* \delta^k + \delta^{k-1} (\delta^{k-1})^*$ is
+developed in \cite{HansenGhrist2019}; we use Definition~1 of that
+paper, especially Cond.~4 (boundaries of $1$-cells consist of two
+distinct $0$-cells), to certify regularity of the abstract sampling
+cell complex of \cref{def:Xsamp}. The conference
+version \cite{HansenGhrist2019Allerton} introduces the spectral gap
+quantities $\gamma_+, \Gamma_+$ on which our intrinsic invariant
+$\sheafBW := \sqrt{\gamma_+/\Gamma_+}$ is built.
+
+% -------------------------------------------------------------
+\subsection{Topological signal processing}\label{subsec:related-topsp}
+
+Topological signal processing on simplicial complexes is the program
+initiated by \cite{BarbarossaSardellitti2020}: signals live on
+$k$-cochains, the simplicial Laplacian replaces the graph Laplacian,
+and bandlimited subspaces are defined as eigenspaces of the
+simplicial Laplacian below a fixed threshold $B$. The school treats
+sampling and reconstruction via Riesz frame inequalities in the
+bandlimited subspace, an angle that we recover as condition~(b) of
+\cref{thm:triangle-equiv}. The recent survey of
+\cite{CerejeirasKahlerLegatiuk2025} is our second anchor for
+placing topological signal processing relative to FEEC; that survey
+does not invoke AFW Hilbert complexes.
+
+% -------------------------------------------------------------
+\subsection{Dagger Galerkin theory}\label{subsec:related-dagger}
+
+A categorical formulation of Galerkin theory in which monomorphisms
+carry a $\dagger$ (right-adjoint) structure is given by
+\cite{LahtinenStenvall2020}; the abstract dagger setting is
+\cite{HeunenVicary2019}. We use this thread sparingly: the dagger
+tools clarify which subcategories of $\CellSh^{\fin}_{\Hilb}(X)$
+carry a unitary structure, and they make
+\cref{op:non-trivial-dagger} a precise question about the existence
+of a non-trivial $\dagger$ on the full category. The unitary
+subcategory $\CellSh^{\fin}_{\Hilb}(X)^{\mathrm{u}}$ of
+\cref{def:unitary-subcat} is a groupoid
+(\cref{prop:unitary-groupoid}); the question is whether this
+restricted structure extends.
+
+% -------------------------------------------------------------
+\subsection{What has not been combined}\label{subsec:related-gap}
+
+Each of the four schools above provides precise tools, and each
+admits the underlying combinatorial object---a regular cell complex
+with cochain spaces and a coboundary operator---without difficulty.
+Yet the four have not been combined on a single concrete object
+producing a single scalar that is at once intrinsic to the abstract
+structure and computable from acquisition data. The references
+cited in this section are mutually disjoint: \cite{AFW2010} does
+not invoke cellular sheaves; \cite{HansenGhrist2019} does not
+invoke FEEC; \cite{BarbarossaSardellitti2020} does not invoke
+either; \cite{LahtinenStenvall2020} does not invoke any signal
+processing applications. This paper supplies the missing object
+(the abstract sampling cell complex $X^A$ of \cref{def:Xsamp}) and
+the missing scalar (the strict equality of
+\cref{thm:strict-equality}). \Cref{tab:feec-four-schools} in
+\cref{sec:feec_review} records the four-school comparison once the
+needed FEEC machinery has been reviewed.
+
+\medskip\noindent
+Each school provides precise tools but operates in isolation. We now
+exhibit the first formal bridge between three of them via a triangle
+equivalence theorem (\cref{sec:triangle}), which pinpoints exactly
+where Robinson's open problem lives.

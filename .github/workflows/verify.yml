@@ -1,0 +1,74 @@
+name: Verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  lean-build:
+    name: Lean 4 build (lake build / 0 sorry / 0 admit / 0 warning)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache .lake
+        uses: actions/cache@v4
+        with:
+          path: lean/.lake
+          key: ${{ runner.os }}-lake-${{ hashFiles('lean/lake-manifest.json', 'lean/lean-toolchain') }}
+          restore-keys: |
+            ${{ runner.os }}-lake-
+
+      - name: Lake update + build
+        working-directory: lean
+        run: |
+          lake update
+          lake build
+
+      - name: Sanity check — no sorry / no admit in MRI/
+        working-directory: lean
+        run: |
+          if grep -rnE '(^|[^a-zA-Z_])(sorry|admit)([^a-zA-Z_]|$)' MRI/ | grep -v '^[[:space:]]*--' | grep -v '/-' ; then
+            echo "❌ sorry or admit found in Lean source"
+            exit 1
+          fi
+          echo "✅ 0 sorry / 0 admit confirmed"
+
+  paper-build:
+    name: Paper PDF build (pdflatex double-pass / 0 undefined ref)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile main.tex (pass 1)
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: paper/v0.1
+          root_file: main.tex
+          args: -interaction=nonstopmode -halt-on-error
+
+      - name: Compile main.tex (pass 2, resolve cross-refs)
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: paper/v0.1
+          root_file: main.tex
+          args: -interaction=nonstopmode -halt-on-error
+
+      - name: Verify PDF produced
+        run: test -f paper/v0.1/main.pdf
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: main-pdf
+          path: paper/v0.1/main.pdf

@@ -1,0 +1,43 @@
+# =============================================================
+# sheaf-bandwidth — public artifact mirror of MRI project
+# =============================================================
+
+# Lean build cache (mathlib4 source + compiled .olean) — ~7 GB
+.lake/
+*.olean
+
+# Python
+*.pyc
+__pycache__/
+.venv/
+.ruff_cache/
+
+# LaTeX intermediate (only keep main.tex sources + main.pdf)
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# macOS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# .claude/ + .context/ — project-internal config / private sediment;
+# NEVER include in public mirror (no exception)
+.claude/
+.context/
+
+# Lean scratch files (not part of the formalization)
+_phase*.lean
+
+# Internal authoring notes (not part of the public artifact)
+paper/v0.1/notes/
+
+# Mathlib4 template CI in lean/ subdir — redundant with root .github/workflows
+lean/.github/

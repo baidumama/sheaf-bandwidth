@@ -1,0 +1,38 @@
+% =============================================================
+% Abstract (120-180 words, five sentences)
+% Template: paper/v0.1/notes/narrative.md §2
+% =============================================================
+
+A cellular sheaf of Hilbert spaces equips a regular cell complex with
+stalks and restriction maps, and Robinson \cite[\S 6]{Robinson2014}
+introduced an analytic invariant of such sheaves---the
+\emph{bandwidth}---while leaving open whether this invariant admits a
+definition intrinsic to the sheaf rather than to a chosen ambient
+representation.
+We propose
+$\sheafBW(\mathscr{A}) := \sqrt{\gamma_+(\delta^0)/\Gamma_+(\delta^0)}$,
+prove unitary invariance (\cref{prop:sheafBW-unitary}), and establish
+a strict equality
+$\sheafBW(\samps) = \sigma_{\min}(A)/\sigma_{\max}(A)$
+(\cref{thm:strict-equality}) on an abstract sampling cell complex
+$X^A$ with a canonical double $0$-cell construction. The framework
+is instantiated in three previously disjoint domains---topological
+signal processing on simplicial complexes, finite element
+electromagnetics, and Brillouin zone tetrahedron quadrature in
+condensed matter---unified by a common categorical template, with a
+triangle equivalence (\cref{thm:triangle-equiv}) connecting finite
+element exterior calculus singular value bounds, topological signal
+processing Riesz frame conditions, and Robinson sheaf cohomology;
+numerical verification across three toy operators matching the common
+finite-dimensional template confirms the strict equality to within the
+expected floating-point error budget ($\mathrm{reldiff} \le 1.64
+\times 10^{-14}$, driven by the squaring of the condition number under
+the $A^* A$ form). An empirical
+proposition (\cref{empirical:8b}) relates the sampling and
+integration maps via a Pareto trade-off, supported by two
+empirical channels (a project-internal numerical study and five
+decades of Brillouin zone practice) and a Fourier-spectrum
+heuristic. Two independent open problems remain: a
+non-trivial dagger structure on the full category
+(\cref{op:non-trivial-dagger}) and a constructive Pareto proof of the
+empirical proposition (\cref{op:8b-rigor}).

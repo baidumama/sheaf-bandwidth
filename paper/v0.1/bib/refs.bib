@@ -1,0 +1,471 @@
+% =============================================================
+% Bibliography
+%
+% References collected across paper sections (Triangle equivalence,
+% FEEC, sheaf bandwidth, three instances, numerical verification).
+%   - literature-review-FEEC-W0-P-deep.md
+%   - A-route-ch2-sheaf-bandwidth-intrinsic-v0.3.md
+%   - A-route-ch3-three-instances-v0.2.md
+%   - code/A_route_ch3_numerical.py
+% + 上游 sanity 文件中显式 bibliographic 命中
+%
+% Sub-agent 写章节时遇到本表未列的引用,在自己 .tex 文件头加
+%   % TODO new ref: Author Year Title (URL)
+% 主对话 Phase 3 整合时统一收敛进本文件。
+%
+% 字段约定:bibkey = AuthorYear (e.g., Robinson2014, AFW2010)
+% =============================================================
+
+% =============================================================
+% I. Cellular sheaf signal processing
+% =============================================================
+
+@book{Robinson2014,
+  author    = {Robinson, Michael},
+  title     = {Topological Signal Processing},
+  publisher = {Springer},
+  series    = {Mathematical Engineering},
+  year      = {2014},
+  address   = {Berlin, Heidelberg},
+  doi       = {10.1007/978-3-642-36104-3},
+  note      = {\S 6 leaves open the question of a sheaf-categorical bandwidth definition for sheaves of Hilbert spaces.}
+}
+% verified ✅ via https://api.crossref.org/works/10.1007/978-3-642-36104-3
+
+@misc{Robinson2014Sampling,
+  author        = {Robinson, Michael},
+  title         = {A sheaf-theoretic perspective on sampling},
+  year          = {2014},
+  eprint        = {1405.0324},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.AT},
+  doi           = {10.48550/arXiv.1405.0324},
+  note          = {Sheaf perspective on sampling; complementary in topic to the bandwidth open problem of \cite{Robinson2014} \S 6.}
+}
+% verified ✅ via https://arxiv.org/abs/1405.0324
+
+@inproceedings{HansenGhrist2019Allerton,
+  author    = {Hansen, Jakob and Ghrist, Robert},
+  title     = {Distributed Optimization with Sheaf Homological Constraints},
+  booktitle = {2019 57th Annual Allerton Conference on Communication, Control, and Computing (Allerton)},
+  pages     = {565--571},
+  year      = {2019},
+  publisher = {IEEE},
+  doi       = {10.1109/ALLERTON.2019.8919796},
+  note      = {Introduces sheaf Laplacians as drop-in replacements for graph Laplacians in distributed algorithms. (Bibkey renamed from HansenGhrist2018 — original entry's arXiv 1808.01513 was the Spectral Theory paper, not this one.)}
+}
+% revised from memory ⚠️ via https://api.crossref.org/works/10.1109/ALLERTON.2019.8919796
+% NOTE: original bibkey HansenGhrist2018 used arXiv 1808.01513 + title "Distributed Optimization with Sheaf Laplacians" — both wrong. arXiv 1808.01513 is the Spectral Theory paper (HansenGhrist2019). The Distributed Optimization paper has title "...with Sheaf Homological Constraints" and was published only at Allerton 2019. CITERS MUST UPDATE bibkey HansenGhrist2018 → HansenGhrist2019Allerton across all .tex files.
+
+@article{HansenGhrist2019,
+  author    = {Hansen, Jakob and Ghrist, Robert},
+  title     = {Toward a Spectral Theory of Cellular Sheaves},
+  journal   = {Journal of Applied and Computational Topology},
+  volume    = {3},
+  number    = {4},
+  pages     = {315--358},
+  year      = {2019},
+  doi       = {10.1007/s41468-019-00038-7},
+  eprint    = {1808.01513},
+  archivePrefix = {arXiv},
+  primaryClass = {math.AT},
+  url       = {https://arxiv.org/abs/1808.01513}
+}
+% verified ✅ via https://api.crossref.org/works/10.1007/s41468-019-00038-7
+% NOTE: arXiv eprint 1808.01513 is the preprint version of THIS paper (added during verify).
+
+% =============================================================
+% II. Finite Element Exterior Calculus (FEEC) school
+% =============================================================
+
+@article{AFW2010,
+  author    = {Arnold, Douglas N. and Falk, Richard S. and Winther, Ragnar},
+  title     = {Finite Element Exterior Calculus: From {H}odge Theory to Numerical Stability},
+  journal   = {Bulletin of the American Mathematical Society},
+  volume    = {47},
+  number    = {2},
+  pages     = {281--354},
+  year      = {2010},
+  doi       = {10.1090/S0273-0979-10-01278-4},
+  eprint    = {0906.4325},
+  archivePrefix = {arXiv}
+}
+% verified ✅ via https://api.crossref.org/works/10.1090/S0273-0979-10-01278-4 + https://arxiv.org/abs/0906.4325
+
+@article{AFW2006,
+  author    = {Arnold, Douglas N. and Falk, Richard S. and Winther, Ragnar},
+  title     = {Finite Element Exterior Calculus, Homological Techniques, and Applications},
+  journal   = {Acta Numerica},
+  volume    = {15},
+  pages     = {1--155},
+  year      = {2006},
+  doi       = {10.1017/S0962492906210018}
+}
+% verified ✅ via https://api.crossref.org/works/10.1017/S0962492906210018
+
+@article{Christiansen2010,
+  author    = {Christiansen, Snorre H.},
+  title     = {Finite Element Systems of Differential Forms},
+  journal   = {arXiv preprint},
+  year      = {2010},
+  eprint    = {1006.4779},
+  archivePrefix = {arXiv},
+  primaryClass = {math.NA},
+  url       = {https://arxiv.org/abs/1006.4779},
+  note      = {Definition 2 (FES = contravariant functor from poset of cells to vector spaces) and Proposition 2.10 used in \S 4. arXiv preprint posted 2010-06-24; published as Christiansen-Munthe-Kaas-Owren, Acta Numerica vol 20 (2011) — see arxiv abs page for the journal version.}
+}
+% verified ✅ via https://arxiv.org/abs/1006.4779
+% NOTE: kept [article] (arXiv preprint) entry as written. If author wants the journal version, it's actually a multi-author "Topics in structure-preserving discretization" by Christiansen-Munthe-Kaas-Owren, Acta Numerica 20 (2011) -- different scope. Preprint title verified as "Finite element systems of differential forms" matches single-author preprint.
+
+@article{ChristiansenRapetti2025,
+  author    = {Christiansen, Snorre H. and Rapetti, Francesca},
+  title     = {Interpretation of a Discrete de Rham Method as a Finite Element System},
+  journal   = {arXiv preprint},
+  year      = {2025},
+  eprint    = {2512.05912},
+  archivePrefix = {arXiv},
+  url       = {https://arxiv.org/abs/2512.05912},
+  note      = {DDR method shown to define computable consistent discrete L2 product on conforming FES; not connected to cellular sheaf signal processing.}
+}
+% revised from memory ⚠️ via https://arxiv.org/abs/2512.05912
+% NOTE: title was "DDR as FES" (paraphrase from memory) — actual title is "Interpretation of a Discrete de Rham Method as a Finite Element System".
+
+@incollection{BochevHyman2006,
+  author    = {Bochev, Pavel B. and Hyman, James M.},
+  title     = {Principles of Mimetic Discretizations of Differential Operators},
+  booktitle = {Compatible Spatial Discretizations},
+  editor    = {Arnold, Douglas N. and Bochev, Pavel B. and Lehoucq, Richard B. and Nicolaides, Roy A. and Shashkov, Mikhail},
+  series    = {The IMA Volumes in Mathematics and its Applications},
+  volume    = {142},
+  pages     = {89--119},
+  publisher = {Springer},
+  address   = {New York},
+  year      = {2006},
+  doi       = {10.1007/0-387-38034-5_5}
+}
+% verified ✅ via https://api.crossref.org/works/10.1007/0-387-38034-5_5 (chapter) + https://api.crossref.org/works/10.1007/0-387-38034-5 (book editors)
+% NOTE: IMA volume number 142 not directly visible in Crossref metadata but matches well-known printed volume; kept.
+
+@article{FalkWinther2014,
+  author    = {Falk, Richard S. and Winther, Ragnar},
+  title     = {Local Bounded Cochain Projections},
+  journal   = {Mathematics of Computation},
+  volume    = {83},
+  number    = {290},
+  pages     = {2631--2656},
+  year      = {2014},
+  doi       = {10.1090/S0025-5718-2014-02827-5},
+  note      = {Establishes that Whitney interpolation is not a projection; constructs a true local bounded cochain projection.}
+}
+% revised from memory ⚠️ via https://api.crossref.org/works/10.1090/s0025-5718-2014-02827-5
+% NOTE: DOI suffix corrected from "-X" to "-5" (original had wrong final character).
+
+@book{Whitney1957,
+  author    = {Whitney, Hassler},
+  title     = {Geometric Integration Theory},
+  publisher = {Princeton University Press},
+  series    = {Princeton Mathematical Series},
+  volume    = {21},
+  year      = {1957},
+  address   = {Princeton, NJ}
+}
+% revised from memory ⚠️ via https://en.wikipedia.org/wiki/Hassler_Whitney
+% NOTE: added series + volume info per Wikipedia.
+
+@article{Bossavit1988,
+  author    = {Bossavit, Alain},
+  title     = {Whitney Forms: A Class of Finite Elements for Three-Dimensional Computations in Electromagnetism},
+  journal   = {{IEE} Proceedings A (Physical Science, Measurement and Instrumentation, Management and Education)},
+  volume    = {135},
+  number    = {8},
+  pages     = {493--500},
+  year      = {1988},
+  doi       = {10.1049/ip-a-1.1988.0077}
+}
+% verified ✅ via https://api.crossref.org/works/10.1049/ip-a-1.1988.0077
+% NOTE: Crossref returns "page 493" only (not page range), but per IEE Proc convention 493--500 is the standard cited range.
+
+% =============================================================
+% III. Topological Signal Processing (TopSP)
+% =============================================================
+
+@article{BarbarossaSardellitti2020,
+  author    = {Barbarossa, Sergio and Sardellitti, Stefania},
+  title     = {Topological Signal Processing over Simplicial Complexes},
+  journal   = {{IEEE} Transactions on Signal Processing},
+  volume    = {68},
+  pages     = {2992--3007},
+  year      = {2020},
+  doi       = {10.1109/TSP.2020.2981920}
+}
+% verified ✅ via https://api.crossref.org/works/10.1109/TSP.2020.2981920
+
+% =============================================================
+% IV. Dagger categories / Galerkin / Quantum theory
+% =============================================================
+
+@article{LahtinenStenvall2020,
+  author    = {Lahtinen, Valtteri and Stenvall, Antti},
+  title     = {A Category Theoretical Interpretation of Discretization in {G}alerkin Finite Element Method},
+  journal   = {Mathematische Zeitschrift},
+  volume    = {296},
+  number    = {3-4},
+  pages     = {1271--1285},
+  year      = {2020},
+  doi       = {10.1007/s00209-020-02456-1},
+  note      = {Discretization characterized as a dagger mono with discrete domain in the category of Hilbert spaces.}
+}
+% revised from memory ⚠️ via https://api.crossref.org/works/10.1007/s00209-020-02456-1
+% NOTE: original DOI 10.1007/s00209-019-02436-0 was WRONG (led to a different paper, Blasten-Tzou-Wang 2020 inverse boundary problem). Title also slightly corrected: "A Category Theoretical Interpretation..." (not "A Categorical Interpretation..."). Vol/issue/pages added.
+
+@book{HeunenVicary2019,
+  author    = {Heunen, Chris and Vicary, Jamie},
+  title     = {Categories for Quantum Theory: An Introduction},
+  publisher = {Oxford University Press},
+  series    = {Oxford Graduate Texts in Mathematics},
+  volume    = {28},
+  year      = {2019},
+  address   = {Oxford},
+  doi       = {10.1093/oso/9780198739623.001.0001},
+  note      = {Chapter 2 (\S 2.3 + 2.18--2.19) for the standard dagger functor axioms.}
+}
+% verified ✅ via https://api.crossref.org/works/10.1093/oso/9780198739623.001.0001
+% NOTE: Crossref confirms authors + title + 2019 OUP. Series volume number "28" not directly verifiable from Crossref metadata; OUP Oxford Graduate Texts in Mathematics series numbering kept from memory — RECOMMEND cross-check on physical copy or OUP website before final submission.
+
+% =============================================================
+% V. MRI sampling baseline (2024--2026 four-school landscape)
+% =============================================================
+% Note: §1.2 baseline four-school references — representative papers
+% per school.
+
+@article{LustigDonohoPauly2007,
+  author    = {Lustig, Michael and Donoho, David and Pauly, John M.},
+  title     = {Sparse {MRI}: The Application of Compressed Sensing for Rapid {MR} Imaging},
+  journal   = {Magnetic Resonance in Medicine},
+  volume    = {58},
+  number    = {6},
+  pages     = {1182--1195},
+  year      = {2007},
+  doi       = {10.1002/mrm.21391}
+}
+% verified ✅ via https://api.crossref.org/works/10.1002/mrm.21391
+
+@article{LazarusEtAl2019Sparkling,
+  author    = {Lazarus, Carole and Weiss, Pierre and Chauffert, Nicolas and Mauconduit, Franck and El Gueddari, Loubna and Destrieux, Christophe and Zemmoura, Ilyess and Vignaud, Alexandre and Ciuciu, Philippe},
+  title     = {{SPARKLING}: Variable-Density {$k$}-Space Filling Curves for Accelerated {T}$_2^*$-Weighted {MRI}},
+  journal   = {Magnetic Resonance in Medicine},
+  volume    = {81},
+  number    = {6},
+  pages     = {3643--3661},
+  year      = {2019},
+  doi       = {10.1002/mrm.27678}
+}
+% verified ✅ via https://api.crossref.org/works/10.1002/mrm.27678
+
+% TODO: representatives for each baseline school (model-based / learned joint /
+% diffusion / deep CS unrolled). Sub-agent 1 to fill from
+% literature-review-baseline-2026-sanity.md.
+
+% =============================================================
+% VI. Brillouin zone tetrahedron quadrature (Instance 3)
+% =============================================================
+
+@article{Blochl1994,
+  author    = {Bl{\"o}chl, Peter E. and Jepsen, Ole and Andersen, Ole K.},
+  title     = {Improved Tetrahedron Method for {B}rillouin-zone Integrations},
+  journal   = {Physical Review B},
+  volume    = {49},
+  number    = {23},
+  pages     = {16223--16233},
+  year      = {1994},
+  doi       = {10.1103/PhysRevB.49.16223}
+}
+% verified ✅ via https://api.crossref.org/works/10.1103/PhysRevB.49.16223
+
+@article{LehmannTaut1972,
+  author    = {Lehmann, Gernot and Taut, Manfred},
+  title     = {On the Numerical Calculation of the Density of States and Related Properties},
+  journal   = {Physica Status Solidi (B)},
+  volume    = {54},
+  number    = {2},
+  pages     = {469--477},
+  year      = {1972},
+  doi       = {10.1002/pssb.2220540211}
+}
+% verified ✅ via https://api.crossref.org/works/10.1002/pssb.2220540211
+
+@article{JepsenAndersen1971,
+  author    = {Jepsen, Ole and Andersen, Ole K.},
+  title     = {The Electronic Structure of {h.c.p.} Ytterbium},
+  journal   = {Solid State Communications},
+  volume    = {9},
+  number    = {20},
+  pages     = {1763--1767},
+  year      = {1971},
+  doi       = {10.1016/0038-1098(71)90313-9}
+}
+% verified ✅ via https://api.crossref.org/works/10.1016/0038-1098(71)90313-9
+% NOTE: Crossref OCR'd authors as "O. Jepson" and "O.K. Anderson" — kept the conventional spellings "Jepsen" / "Andersen" matching the well-known later collaboration with Blöchl (also a Crossref-confirmed name).
+
+@article{MonkhorstPack1976,
+  author    = {Monkhorst, Hendrik J. and Pack, James D.},
+  title     = {Special Points for {B}rillouin-zone Integrations},
+  journal   = {Physical Review B},
+  volume    = {13},
+  number    = {12},
+  pages     = {5188--5192},
+  year      = {1976},
+  doi       = {10.1103/PhysRevB.13.5188}
+}
+% verified ✅ via https://api.crossref.org/works/10.1103/PhysRevB.13.5188
+
+% =============================================================
+% VII. Quadrature theory / blue noise (Empirical Proposition 8b)
+% =============================================================
+
+@article{Pilleboue2015,
+  author    = {Pilleboue, Adrien and Singh, Gurprit and Coeurjolly, David and Kazhdan, Michael and Ostromoukhov, Victor},
+  title     = {Variance Analysis for {M}onte {C}arlo Integration},
+  journal   = {{ACM} Transactions on Graphics},
+  volume    = {34},
+  number    = {4},
+  pages     = {124:1--124:14},
+  year      = {2015},
+  doi       = {10.1145/2766930},
+  note      = {Proc. {SIGGRAPH} 2015.}
+}
+% verified ✅ via https://api.crossref.org/works/10.1145/2766930
+% NOTE: journal name simplified to "ACM Transactions on Graphics" (Crossref's exact form), with SIGGRAPH proceedings noted in note field instead.
+
+@article{HeitzBelcour2019,
+  author    = {Heitz, Eric and Belcour, Laurent},
+  title     = {Distributing Monte Carlo Errors as a Blue Noise in Screen Space by Permuting Pixel Seeds Between Frames},
+  journal   = {Computer Graphics Forum},
+  volume    = {38},
+  number    = {4},
+  pages     = {149--158},
+  year      = {2019},
+  doi       = {10.1111/cgf.13778}
+}
+% verified ✅ via https://api.crossref.org/works/10.1111/cgf.13778
+
+@article{TrefethenWeideman2014,
+  author    = {Trefethen, Lloyd N. and Weideman, J. A. C.},
+  title     = {The Exponentially Convergent Trapezoidal Rule},
+  journal   = {{SIAM} Review},
+  volume    = {56},
+  number    = {3},
+  pages     = {385--458},
+  year      = {2014},
+  doi       = {10.1137/130932132},
+  note      = {Use as Trefethen reference for high-order quadrature theory.}
+}
+% revised from memory ⚠️ via https://api.crossref.org/works/10.1137/130932132
+% NOTE: entry type corrected from [book] to [article] (it's a SIAM Review journal article, not a book). Author initials normalized.
+
+% =============================================================
+% VIII. Foundational background
+% =============================================================
+
+@book{ReedSimonI,
+  author    = {Reed, Michael and Simon, Barry},
+  title     = {Methods of Modern Mathematical Physics. {I}: Functional Analysis},
+  edition   = {Revised and enlarged},
+  publisher = {Academic Press},
+  year      = {1980},
+  address   = {New York},
+  note      = {\S II.1 for Hilbert direct sum and zero-summand isometry $V \oplus 0 \cong V$.}
+}
+% verified ⚠️ via Google search (publisher Academic Press, 1980 revised edition is the standard cited form; ISBN 0125850506)
+% NOTE: no DOI for this 1980 book; no Crossref entry. Verified by widely-known catalog metadata + amazon ISBN. Standard library catalog record.
+
+@book{Hatcher2002,
+  author    = {Hatcher, Allen},
+  title     = {Algebraic Topology},
+  publisher = {Cambridge University Press},
+  year      = {2002},
+  address   = {Cambridge},
+  note      = {\S 2.1 for incidence coefficients and oriented cell complex conventions.}
+}
+% verified ✅ via https://pi.math.cornell.edu/~hatcher/AT/ATpage.html
+% NOTE: author's own page confirms publisher CUP, 2002, ISBN 0-521-79540-0.
+
+@book{MacLane1971,
+  author    = {Mac Lane, Saunders},
+  title     = {Categories for the Working Mathematician},
+  series    = {Graduate Texts in Mathematics},
+  volume    = {5},
+  publisher = {Springer},
+  year      = {1971},
+  address   = {New York},
+  note      = {\S I.5 for the standard definition of a groupoid. First edition 1971; 2nd edition 1998.}
+}
+% verified ✅ via https://en.wikipedia.org/wiki/Categories_for_the_Working_Mathematician
+% NOTE: original 1971 edition correctly identified; GTM volume 5 confirmed.
+
+@article{BruningLesch1992,
+  author    = {Br{\"u}ning, Jochen and Lesch, Matthias},
+  title     = {Hilbert Complexes},
+  journal   = {Journal of Functional Analysis},
+  volume    = {108},
+  number    = {1},
+  pages     = {88--132},
+  year      = {1992},
+  doi       = {10.1016/0022-1236(92)90147-B},
+  note      = {Foundational treatment of Hilbert complexes; cited by Hansen-Ghrist 2019 \S 3.3 for the infinite-dimensional Hodge decomposition.}
+}
+% verified ✅ via https://api.crossref.org/works/10.1016/0022-1236(92)90147-B
+% NOTE: minor: updated note to "Hansen-Ghrist 2019" (the Spectral Theory paper, formerly mis-keyed as 2018).
+
+% =============================================================
+% IX. Script Geometry (negative connection result, cited in §2)
+% =============================================================
+
+@article{CerejeirasKahlerLegatiuk2025,
+  author    = {Cerejeiras, Paula and K{\"a}hler, Uwe and Legatiuk, Dmitrii},
+  title     = {Script Geometry: Categorical Perspective and a Connection to Exterior Calculus {FEM}},
+  journal   = {Complex Analysis and Operator Theory},
+  volume    = {19},
+  number    = {4},
+  pages     = {Article 75},
+  year      = {2025},
+  doi       = {10.1007/s11785-025-01708-4},
+  note      = {Categorical framework on tight scripts (Sommen school); does not connect to cellular sheaf signal processing.}
+}
+% revised from memory ⚠️ via https://api.crossref.org/works/10.1007/s11785-025-01708-4
+% NOTE: title corrected to full form (added subtitle "Categorical Perspective and a Connection to Exterior Calculus FEM"); issue corrected from "75" to "4" (75 was the article number, not the issue number); article number recorded in pages field.
+
+% =============================================================
+% X. Numerical / scripting infrastructure (cited in §7 for reproducibility)
+% =============================================================
+
+@article{HarrisEtAl2020NumPy,
+  author    = {Harris, Charles R. and Millman, K. Jarrod and van der Walt, St{\'e}fan J. and Gommers, Ralf and Virtanen, Pauli and Cournapeau, David and Wieser, Eric and Taylor, Julian and Berg, Sebastian and Smith, Nathaniel J. and Kern, Robert and Picus, Matti and Hoyer, Stephan and van Kerkwijk, Marten H. and Brett, Matthew and Haldane, Allan and Fern{\'a}ndez del R{\'{\i}}o, Jaime and Wiebe, Mark and Peterson, Pearu and G{\'e}rard-Marchant, Pierre and Sheppard, Kevin and Reddy, Tyler and Weckesser, Warren and Abbasi, Hameer and Gohlke, Christoph and Oliphant, Travis E.},
+  title     = {Array Programming with {NumPy}},
+  journal   = {Nature},
+  volume    = {585},
+  number    = {7825},
+  pages     = {357--362},
+  year      = {2020},
+  doi       = {10.1038/s41586-020-2649-2},
+  publisher = {Springer Nature}
+}
+% revised from memory ⚠️ via https://numpy.org/citing-numpy/
+% NOTE: original entry was a generic [misc] with year=2024 + corporate author "NumPy Developers" -- replaced with the canonical Nature 2020 paper that NumPy.org's "Citing NumPy" page recommends. Bibkey changed NumPy -> HarrisEtAl2020NumPy; CITERS MUST UPDATE cite{NumPy} -> cite{HarrisEtAl2020NumPy} across .tex files.
+
+% =============================================================
+% Additional references (added during writing; bibkey style: AuthorYearShortTitle)
+% =============================================================
+
+% TODO Curry 2014 sheaves cosheaves applications (PhD thesis, Penn)
+% TODO Selinger 2007 dagger compact closed categories
+% TODO Knoll et al 2020 fastMRI dataset
+% TODO Pruessmann et al 1999 SENSE
+% TODO Sandino et al 2020 model-based DL MRI
+% TODO Chung-Ye 2022 score-based diffusion MRI
+% TODO Aggarwal et al 2018 MoDL model-based MRI
+% TODO Hammernik et al 2018 variational network MRI
+% TODO Ramzi et al 2020 deep CS unrolled MRI
+% TODO Chaithya et al 2022 SPARKLING multi-shot
+% TODO PBR-Book Pharr-Jakob-Humphreys §8.2.1 sampling theory
+% TODO nLab dagger category page (web reference, may need misc entry)

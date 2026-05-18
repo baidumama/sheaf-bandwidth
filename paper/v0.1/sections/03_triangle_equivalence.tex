@@ -1,0 +1,410 @@
+% =============================================================
+% Section 3. Triangle Equivalence: FEEC Geometry, Hodge Spectrum,
+% and Robinson Sheaf Cohomology
+% =============================================================
+
+% --- Opening hook (continuing from Section 2) ---
+We now construct the bridge promised in \cref{sec:intro}: three
+formulations of well-conditioning for $k$-space sampling, drawn from
+three schools that have not previously been combined---finite element
+exterior calculus (FEEC) singular value bounds, topological signal
+processing (TopSP) Riesz frame conditions, and Robinson sheaf
+cohomology with sheaf bandwidth---are formally equivalent under the
+common finite-dimensional sampling-operator normal form introduced
+in \cref{subsec:tri-setup}. The equivalence is asserted in this
+finite-dimensional normal form; the original infinite-dimensional
+or qualitative formulations of the three source literatures are not
+themselves claimed to be equivalent outside this normalization (see
+\cref{subsec:tri-edge}, (L1)). The equivalence is stated as
+\cref{thm:triangle-equiv} and proved in
+\cref{subsec:tri-ab,subsec:tri-ac}. The proof of $(a) \Leftrightarrow
+(c)$ produces a candidate definition of sheaf bandwidth that is not
+categorically intrinsic; the categorically intrinsic version is
+constructed in \cref{sec:sheafbw}. We close the section by formalizing
+Robinson's open problem from \cite[\S 6]{Robinson2014} as a precisely
+narrowed two-clause question (\cref{subsec:tri-narrowing}).
+
+% =============================================================
+\subsection{Setup and notation}\label{subsec:tri-setup}
+% =============================================================
+
+The well-conditioning of $k$-space sampling admits three equivalent
+readings: an SVD-style ratio $\sigma_{\min}(A)/\sigma_{\max}(A)$ of the
+sampling operator; a Riesz frame inequality on a bandlimited subspace;
+and a sheaf-cohomological condition on an abstract sampling cell complex.
+\Cref{thm:triangle-equiv} makes this precise: the three readings agree
+on the same threshold $\tau \in (0,1]$. The setup below introduces the
+common notation in which all three formulations live---the bandlimited
+subspace $V_B$, the sampling operator $A$, and the condition number
+$\kappa(A)$---before the triangle statement in
+\cref{subsec:tri-theorem}.
+
+Let $\Omega_k := B(0, k_{\max}) \subset \mathbb{R}^d$ be a closed ball
+in $k$-space, and let $V = \{k_1, \ldots, k_N\} \subset \Omega_k$ be a
+finite set of $N$ candidate sample positions. We do not impose
+geometric structure on $V$ at this stage; the dependence of the
+constructions on $V$ is recorded explicitly via $V_B(V)$ below and
+discussed in \cref{sec:three_instances}.
+
+Let $X(V)$ denote the Delaunay simplicial complex on $V$ (cells:
+vertices $V$, edges $E$, faces $F$, tetrahedra $T$), oriented in the
+sense of \cite[\S 2.1]{Hatcher2002}. Edge weights are
+$w_{ij} := \lvert k_i - k_j \rvert^{-2}$ (with the convention
+$w_{ij} = 0$ if $\{i,j\} \notin E$), and
+$W := (w_{ij})_{1 \le i, j \le N}$. Set
+$D := \mathrm{diag}(d_1, \ldots, d_N)$ with $d_i := \sum_j w_{ij}$,
+and define the graph Laplacian
+$L_0 := D - W \in \mathbb{R}^{N \times N}$. The eigenpairs of $L_0$
+are denoted $(\mu_l, v_l)_{l = 0, \ldots, N-1}$ with
+$0 = \mu_0 \le \mu_1 \le \cdots \le \mu_{N-1}$ and
+$\{v_l\}_{l=0}^{N-1}$ an orthonormal basis of $\C^N$.
+
+For a fixed bandwidth threshold $B \in (0, \mu_{N-1})$, define the
+$B$-bandlimited subspace
+\begin{equation}\label{eq:VB-def}
+  V_B(V) := \mathrm{span}\{\, v_l : \mu_l \le B \,\} \;\subset\; \C^N,
+  \qquad K := \dim V_B(V).
+\end{equation}
+We write $V_B$ for $V_B(V)$ when $V$ is fixed and emphasize the
+$V$-dependence only when comparing across instances
+(\cref{sec:three_instances}).
+
+Fix a sampling subset $V_s \subset \{1, \ldots, N\}$ with
+$M := \lvert V_s \rvert \ge K$. Let
+$\Sigma_{V_s} : \C^N \to \C^M$ be the index restriction operator
+$(\Sigma_{V_s} c)_n := c_{i_n}$ for $V_s = \{i_1, \ldots, i_M\}$, and
+let $\iota_B : V_B \hookrightarrow \C^N$ be the canonical isometric
+embedding. The \emph{sampling operator}
+\begin{equation}\label{eq:A-def}
+  A \;:=\; \Sigma_{V_s} \circ \iota_B \;:\; V_B \longrightarrow \C^M
+\end{equation}
+is the central object of this paper. In the basis
+$\{v_l\}_{l=0}^{K-1}$ of $V_B$ and the canonical basis of $\C^M$, $A$
+has the matrix representation
+\[
+  A \;=\; \bigl[\, v_l(i_n) \,\bigr]_{n = 1, \ldots, M;\, l = 0, \ldots, K-1}
+  \;\in\; \C^{M \times K}.
+\]
+
+The singular values of $A$ are denoted
+\[
+  \sigma_{\max}(A) \;:=\; \sigma_0(A)
+  \;\ge\; \sigma_1(A) \;\ge\; \cdots \;\ge\; \sigma_{K-1}(A)
+  \;=:\; \sigma_{\min}(A) \;\ge\; 0.
+\]
+The condition number is
+$\kappa(A) := \sigma_{\max}(A) / \sigma_{\min}(A) \in [1, \infty]$,
+with $\kappa(A) = \infty$ when $\sigma_{\min}(A) = 0$ (rank
+deficiency). Throughout, $\tau \in (0, 1]$ denotes a fixed
+well-conditioning threshold; $A$ is \emph{$\tau$-well-conditioned}
+when $\kappa(A) \le 1/\tau$, equivalently
+$\sigma_{\min}(A) \ge \tau \, \sigma_{\max}(A)$.
+
+% =============================================================
+\subsection{Triangle equivalence theorem}\label{subsec:tri-theorem}
+% =============================================================
+
+\begin{theorem}[Triangle Equivalence]\label{thm:triangle-equiv}\footnote{Formalized in Lean 4 as \texttt{triangle\_equivalence} in \texttt{lean/MRI/Cellular/TriangleEquivalence.lean}. The Lean statement formalizes the finite-dimensional operator/sheaf core of the theorem, with $V_B$ represented by an abstract Hilbert space and $A$ by an evaluation operator; the construction of $V_B(V)$ from the Delaunay graph is treated as setup data rather than separately formalized geometry. Full correspondence: \texttt{lean/CROSSREF.md}.}
+Fix $V$, $V_s$, $B$ (and hence $V_B = V_B(V)$ and $A$ as in
+\cref{subsec:tri-setup}), and fix $\tau \in (0, 1]$. The following
+three statements are equivalent.
+\begin{enumerate}
+  \item[\textup{(a)}] \emph{(FEEC singular value form.)}
+        $\sigma_{\min}(A) \ge \tau \, \sigma_{\max}(A)$.
+  \item[\textup{(b)}] \emph{(Hodge-spectrum Riesz form.)} There exist
+        constants $0 < \alpha \le \beta$ with $\beta / \alpha \le 1/\tau$
+        such that for every $c \in V_B \setminus \{0\}$,
+        \begin{equation}\label{eq:riesz}
+          \alpha \,\lVert c \rVert_{\C^N}
+          \;\le\;
+          \lVert \Sigma_{V_s} c \rVert_{\C^M}
+          \;\le\;
+          \beta \,\lVert c \rVert_{\C^N}.
+        \end{equation}
+        That is, $V_B$ forms a Riesz sequence in $\ell^2(V_s)$ with
+        frame bound ratio $\beta / \alpha \le 1/\tau$.
+  \item[\textup{(c)}] \emph{(Robinson sheaf form.)} On the
+        \emph{abstract sampling sheaf} $\samps$ over the abstract
+        sampling cell complex $X^A$, constructed in
+        \cref{def:Xsamp,def:sampling-sheaf} of \cref{sec:sheafbw},
+        \begin{equation}\label{eq:robinson-sheaf-form}
+          H^0\!\left( X^A;\, \samps \right) \;=\; 0
+          \qquad \text{and} \qquad
+          \sheafBW^{\mathrm{cand}}\!\left( \samps \right)
+          \;\ge\; \tau,
+        \end{equation}
+        where $\sheafBW^{\mathrm{cand}}$ is the candidate sheaf
+        bandwidth of \cref{def:sheafbw-candidate} below.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}[Three readings of one inequality]\label{rem:three-readings}
+The three forms in \cref{thm:triangle-equiv} read the same scalar
+inequality in three vocabularies developed in disjoint literatures:
+the FEEC singular value form is the standard reading via singular
+value bounds \cite{AFW2010}; the Riesz form is the TopSP reading via
+$\ell^2$ frame bounds \cite{BarbarossaSardellitti2020}; the Robinson
+form translates the inequality into the language of cellular sheaves
+on $X(V)$ in the sense of \cite{Robinson2014}, with the sheaf
+bandwidth furnishing the quantitative bound.
+\end{remark}
+
+\Cref{thm:triangle-equiv} is proved in two parts:
+$(a) \Leftrightarrow (b)$ in \cref{subsec:tri-ab}, and
+$(a) \Leftrightarrow (c)$ in \cref{subsec:tri-ac}. The latter relies
+on the abstract sampling sheaf $\samps$ over the cell complex $X^A$,
+whose explicit construction is given in
+\cref{subsec:sheafBW-Xsamp} of \cref{sec:sheafbw}; the candidate
+sheaf bandwidth $\sheafBW^{\mathrm{cand}}$ used in clause~\textup{(c)}
+is recorded in \cref{def:sheafbw-candidate} below in terms of
+$\samps$.
+
+% =============================================================
+\subsection{Proof of $(a) \Leftrightarrow (b)$}\label{subsec:tri-ab}
+% =============================================================
+
+The equivalence $(a) \Leftrightarrow (b)$ is a direct consequence of
+the variational characterization of singular values together with the
+isometry of $\iota_B$.
+
+\begin{proof}[Proof of $(a) \Leftrightarrow (b)$]
+Since $\iota_B : V_B \hookrightarrow \C^N$ is an isometric embedding,
+$\lVert \iota_B c \rVert_{\C^N} = \lVert c \rVert_{V_B}$ for every
+$c \in V_B$, and consequently
+\begin{equation}\label{eq:Avariational}
+  \lVert A c \rVert_{\C^M}
+  \;=\;
+  \lVert \Sigma_{V_s} \iota_B c \rVert_{\C^M}
+  \;=\;
+  \lVert \Sigma_{V_s} c \rVert_{\C^M}
+  \qquad \text{for every } c \in V_B,
+\end{equation}
+where in the last equality $V_B$ is identified with its image
+$\iota_B(V_B) \subset \C^N$. The singular values of $A$ are then
+characterized variationally by
+\begin{align}
+  \sigma_{\max}(A)
+    &\;=\; \max_{\substack{c \in V_B \\ \lVert c \rVert = 1}}
+        \lVert \Sigma_{V_s} c \rVert_{\C^M},
+    \label{eq:sigma-max-var} \\
+  \sigma_{\min}(A)
+    &\;=\; \min_{\substack{c \in V_B \\ \lVert c \rVert = 1}}
+        \lVert \Sigma_{V_s} c \rVert_{\C^M}.
+    \label{eq:sigma-min-var}
+\end{align}
+
+\paragraph{$(b) \Rightarrow (a)$.}
+Given $\alpha, \beta$ with the bounds \cref{eq:riesz}, take infimum
+and supremum over $c \in V_B$ with $\lVert c \rVert = 1$. From
+\cref{eq:sigma-max-var,eq:sigma-min-var} this yields
+$\sigma_{\max}(A) \le \beta$ and $\sigma_{\min}(A) \ge \alpha$. The
+hypothesis $\beta / \alpha \le 1/\tau$ then gives
+$\sigma_{\min}(A) / \sigma_{\max}(A) \ge \alpha / \beta \ge \tau$,
+which is $(a)$.
+
+\paragraph{$(a) \Rightarrow (b)$.}
+Set $\alpha := \sigma_{\min}(A)$ and $\beta := \sigma_{\max}(A)$.
+Then $\beta / \alpha = \kappa(A) \le 1/\tau$ by hypothesis.
+\Cref{eq:sigma-max-var,eq:sigma-min-var} together with
+\cref{eq:Avariational} yield, after homogeneity in $c$, the bound
+\cref{eq:riesz} with these constants.
+\end{proof}
+
+% =============================================================
+\subsection{Proof of $(a) \Leftrightarrow (c)$}\label{subsec:tri-ac}
+% =============================================================
+
+The equivalence $(a) \Leftrightarrow (c)$ is realized through the
+abstract sampling sheaf $\samps$ on the cell complex $X^A$, whose
+explicit construction we forward-reference to
+\cref{def:Xsamp,def:sampling-sheaf} in
+\cref{subsec:sheafBW-Xsamp}. Two facts about $\samps$ proved there
+suffice for the present argument:
+\begin{enumerate}[label=\textup{(F\arabic*)},leftmargin=*]
+  \item \emph{Cochain spaces.} $C^0(\samps) \cong V_B$ (canonical
+        isometry, \cref{lem:canonical-isometry}) and
+        $C^1(\samps) = \C^M$
+        (\cref{lem:samps-cochain-spaces}).
+  \item \emph{Coboundary equals sampling operator.} The $0$-th
+        coboundary $\delta^0 : C^0(\samps) \to C^1(\samps)$ of
+        $\samps$ coincides with $A$ after the canonical
+        identification of \cref{lem:canonical-isometry,lem:samps-cochain-spaces},
+        i.e.\ $\delta^0 = A$ as linear maps $V_B \to \C^M$
+        (\cref{prop:delta-equals-A}).
+\end{enumerate}
+Both facts depend only on the data of \cref{def:Xsamp,def:sampling-sheaf}
+and on the sampling operator $A$ recorded in \cref{subsec:tri-setup};
+neither depends on \cref{thm:triangle-equiv}, so the forward
+references are not circular.
+
+\begin{definition}\label{def:sheafbw-candidate}
+The \emph{candidate sheaf bandwidth} of $\samps$ is
+\begin{equation}\label{eq:sheafbw-candidate}
+  \sheafBW^{\mathrm{cand}}(\samps)
+  \;:=\;
+  \frac{\sigma_{\min}(A)}{\sigma_{\max}(A)}
+  \;\in\;
+  [0, 1],
+\end{equation}
+with the convention
+$\sheafBW^{\mathrm{cand}}(\samps) := 0$ when
+$\sigma_{\min}(A) = 0$. This candidate references $\samps$ through
+the operator $A$ derived from the chosen embedding
+$V_B \hookrightarrow \C^N$ and the basis $\{v_l\}_{l=0}^{K-1}$; it is
+therefore not categorically intrinsic to the cellular sheaf data of
+$\samps$. The categorically intrinsic version is the spectral-gap
+ratio
+$\sheafBW := \sqrt{\gamma_+(\delta^0) / \Gamma_+(\delta^0)}$
+constructed in \cref{sec:sheafbw}, which on $\samps$ satisfies a
+strict identity with $\sigma_{\min}(A) / \sigma_{\max}(A)$ via
+\cref{thm:strict-equality}.
+\end{definition}
+
+\begin{proof}[Proof of $(a) \Leftrightarrow (c)$]
+By \textup{(F1)}, the coboundary $\delta^0$ of $\samps$ is well-typed
+as a linear map $V_B \to \C^M$, so the identification with $A$ in
+\textup{(F2)} is type-compatible. Combining \textup{(F1)} and
+\textup{(F2)} gives $\delta^0 = A$ as maps $V_B \to \C^M$, hence
+$H^0(\samps) = \ker \delta^0 = \ker A$, and so
+$H^0(\samps) = 0$ if and only if $\sigma_{\min}(A) > 0$. By
+\cref{def:sheafbw-candidate},
+$\sheafBW^{\mathrm{cand}}(\samps) \ge \tau$ if and only if
+$\sigma_{\min}(A) \ge \tau \, \sigma_{\max}(A)$. The conjunction of
+the two conditions in \cref{eq:robinson-sheaf-form} is therefore
+equivalent to $\sigma_{\min}(A) \ge \tau \, \sigma_{\max}(A)$, i.e.\
+$(a)$.
+\end{proof}
+
+% =============================================================
+\subsection{Reading the candidate bandwidth}\label{subsec:tri-bw-candidate}
+% =============================================================
+
+The candidate definition \cref{eq:sheafbw-candidate} is a numerical
+quantity attached to the sheaf $\samps$ via the operator $A$. Three
+observations describe its character.
+
+\paragraph{(i) Range.}
+$\sheafBW^{\mathrm{cand}}(\samps) \in [0, 1]$, with the value $1$
+attained when $A$ is a positive scalar multiple of an isometry on
+$V_B$ (the maximally well-conditioned case;
+cf.\ \cref{thm:strict-equality}) and the value $0$ attained when $A$
+is rank-deficient (failure of $H^0$ vanishing).
+
+\paragraph{(ii) Three readings, one inequality.}
+\Cref{rem:three-readings} identifies the three vocabularies in which
+$\sigma_{\min}(A) / \sigma_{\max}(A) \ge \tau$ is read; the candidate
+definition \cref{eq:sheafbw-candidate} translates the FEEC reading
+verbatim into the sheaf-cohomological reading. The TopSP reading via
+Riesz frame bounds is recovered through clause $(b)$ of
+\cref{thm:triangle-equiv}.
+
+\paragraph{(iii) Lack of categorical intrinsicness.}
+\Cref{def:sheafbw-candidate} uses the basis $\{v_l\}_{l=0}^{K-1}$ of
+$V_B$ implicit in the matrix form of $A$, i.e.\ data of the
+representation $V_B \hookrightarrow \C^N$ rather than data intrinsic
+to the cellular sheaf $\samps$. The categorically intrinsic
+alternative, defined in \cref{sec:sheafbw} as a spectral gap ratio
+of the sheaf coboundary operator, refers only to $\mathscr{A}$, not
+to an ambient embedding or to a chosen basis of stalks.
+
+% =============================================================
+\subsection{Robinson's open problem: precise narrowing}\label{subsec:tri-narrowing}
+% =============================================================
+
+Robinson \cite[\S 6]{Robinson2014} writes, in the context of cellular
+sheaves whose stalks are Hilbert spaces and whose cochain complexes
+admit Hodge decompositions, that ``there may be a way to discuss the
+concept of \emph{bandwidth} for general sheaves of Hilbert spaces.''
+\Cref{thm:triangle-equiv} together with \cref{def:sheafbw-candidate}
+narrows this to a two-clause open problem.
+
+\begin{enumerate}
+  \item[\textup{(R1)}] \emph{(Categorical intrinsicness.)} Define a
+        sheaf bandwidth $\sheafBW(\mathscr{A})$ for cellular sheaves
+        $\mathscr{A}$ of Hilbert spaces using only the cochain-complex
+        data of $\mathscr{A}$ (stalks, restriction maps, coboundary),
+        without reference to an ambient embedding
+        $V_B \hookrightarrow \C^N$ or to a chosen basis of stalks.
+  \item[\textup{(R2)}] \emph{(Reduction on the sampling instance.)}
+        Whatever intrinsic definition is given in \textup{(R1)}, it
+        must reduce to $\sigma_{\min}(A) / \sigma_{\max}(A)$ on the
+        sampling sheaf instance, so that the candidate
+        \cref{eq:sheafbw-candidate} is recovered as a special case.
+\end{enumerate}
+
+The narrowing replaces the qualitative ``find an equivalent
+definition'' in \cite[\S 6]{Robinson2014} with a concrete two-clause
+specification. \Cref{sec:sheafbw} answers \textup{(R1)} by the
+spectral-gap ratio definition
+$\sheafBW := \sqrt{\gamma_+(\delta^0) / \Gamma_+(\delta^0)}$, and
+answers \textup{(R2)} by \cref{thm:strict-equality}, which establishes
+the strict identity
+$\sheafBW(\samps) = \sigma_{\min}(A) / \sigma_{\max}(A)$ on the
+abstract sampling cell complex of \cref{sec:sheafbw}.
+
+% =============================================================
+\subsection{Edge of soundness}\label{subsec:tri-edge}
+% =============================================================
+
+\Cref{thm:triangle-equiv} is stated and proved within the
+finite-dimensional setting of \cref{subsec:tri-setup}: $V$ is a
+finite vertex set in $\Omega_k$, $V_B \subset \C^N$ is finite
+dimensional, and $A$ acts between finite-dimensional Hilbert spaces.
+Four boundary conditions delimit the scope of the theorem; each is
+recorded as a project-internal limitation, fully resolved within
+this paper or instantiated in a subsequent section.
+
+\paragraph{(L1) Infinite-dimensional stalks.}
+Robinson's open problem in \cite[\S 6]{Robinson2014} is stated for
+sheaves of Hilbert spaces with potentially infinite-dimensional
+stalks, in the setting of Hilbert complexes \cite{BruningLesch1992}.
+The triangle equivalence is established here under the
+finite-dimensional restriction $\dim V_B = K < \infty$. The
+categorically intrinsic version of \cref{sec:sheafbw} is constructed
+in the same finite-dimensional restriction, in which closedness of
+cochain ranges is automatic
+(see \cref{thm:closed-hilbert-complex}). The infinite-dimensional
+extension is outside the scope of this paper.
+
+\paragraph{(L2) Categorical intrinsicness of the bandwidth.}
+\Cref{def:sheafbw-candidate} is not categorically intrinsic to the
+sheaf $\samps$: the basis $\{v_l\}_{l=0}^{K-1}$ underlying the
+matrix form of $A$ is not part of the cellular sheaf data. The
+categorically intrinsic version is given in \cref{sec:sheafbw}; it
+answers clause \textup{(R1)} of \cref{subsec:tri-narrowing} and is
+shown to satisfy clause \textup{(R2)} on $\samps$ via
+\cref{thm:strict-equality}.
+
+\paragraph{(L3) Spectral gap as data, not hypothesis.}
+The bandlimited subspace
+$V_B(V) = \mathrm{span}\{v_l : \mu_l \le B\}$ presupposes a separating
+gap in the spectrum of $L_0$ at $B$; otherwise the cutoff is not
+stable under perturbations of $V$. In the finite-dimensional finite
+vertex setting, the spectral gap is a property of the data $(V, B)$
+rather than a hypothesis of \cref{thm:triangle-equiv}: the theorem
+is stated for fixed $V, V_s, B$ and makes no genericity assumption
+on the gap. The three instances of \cref{sec:three_instances}
+instantiate the spectral-gap data concretely; the resulting
+trade-off between sampling and integration is recorded in
+\cref{sec:three_instances} as Empirical Proposition~8b.
+
+\paragraph{(L4) Vertex geometry not made explicit.}
+The vertex geometry of $V$ enters \cref{thm:triangle-equiv} only
+through the dependence of $V_B(V)$ on $V$ (and through it the matrix
+$A = [v_l(i_n)]$). The geometry is not an independent variable of
+the theorem statement. The three instances of
+\cref{sec:three_instances} instantiate the abstract setting in three
+domain-specific geometries (simplicial complexes for TopSP,
+finite-element meshes for FEM-EM, Brillouin-zone tetrahedra for
+condensed matter), and Empirical Proposition~8b records the Pareto
+trade-off between sampling and integration across geometries within
+each instance.
+
+% --- Closing hook (to Section 4) ---
+\Cref{thm:triangle-equiv} establishes the bridge as a formal
+equivalence and narrows Robinson's open problem to clauses
+\textup{(R1)} and \textup{(R2)} of \cref{subsec:tri-narrowing}. The
+remaining work---constructing the categorically intrinsic sheaf
+bandwidth that answers \textup{(R1)}---requires the FEEC machinery,
+which we review in \cref{sec:feec_review} before resuming the
+construction in \cref{sec:sheafbw}.

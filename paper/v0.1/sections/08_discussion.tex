@@ -1,0 +1,128 @@
+% =============================================================
+% Section 8. Discussion and Open Problems
+% Template: paper/v0.1/notes/narrative.md §4 §8
+% Structure: §8.1 contributions recap / §8.2 OP 4.5-b /
+%            §8.3 OP 8b-rigor / §8.4 MRI engineering outlook /
+%            §8.5 acknowledgments
+% =============================================================
+
+\noindent
+We have constructed a categorical bridge between finite element
+exterior calculus, cellular sheaf signal processing, and topological
+signal processing, instantiated it in three previously disjoint
+domains, and verified its main equality numerically to machine
+precision. We now restate the seven contributions in the order they
+were established, give the precise content of the two open problems
+that remain, and outline the engineering verification on the MRI
+side that lies outside this paper.
+
+% -------------------------------------------------------------
+\subsection{Summary of contributions}\label{subsec:disc-contrib}
+
+\begin{enumerate}[leftmargin=*,label=(C\arabic*)]
+\item The triangle equivalence (\cref{thm:triangle-equiv}) reads one
+  scalar---$\sigma_{\min}(A)/\sigma_{\max}(A)$---through three
+  schools: FEEC singular value bounds (\cref{subsec:tri-ab}), TopSP
+  Riesz frame conditions (\cref{rem:three-readings}), and Robinson
+  sheaf cohomology (\cref{subsec:tri-ac}). The proof produces a
+  candidate sheaf bandwidth that is not yet categorically intrinsic
+  (\cref{def:sheafbw-candidate}), and \cref{subsec:tri-narrowing}
+  precisely narrows Robinson's open problem to the construction of an
+  intrinsic version.
+\item The categorically intrinsic candidate
+  $\sheafBW(\mathscr{A}) := \sqrt{\gamma_+(\delta^0)/\Gamma_+(\delta^0)}$
+  (\cref{def:sheafBW}) is unitarily invariant
+  (\cref{prop:sheafBW-unitary}). The well-definedness of the
+  spectral gap quantities relies on the closed Hilbert complex
+  structure of \cref{thm:closed-hilbert-complex}, which uses the
+  finite-dimensional restriction of \cref{def:finite-dim-sheaf}.
+\item On the abstract sampling cell complex $X^A$
+  (\cref{def:Xsamp}), the sampling sheaf $\samps$
+  (\cref{def:sampling-sheaf}) reduces the intrinsic invariant to the
+  ambient ratio $\sigma_{\min}(A)/\sigma_{\max}(A)$ \emph{strictly}
+  (\cref{thm:strict-equality}) on the well-conditioned locus
+  $\sigma_{\min}(A) > 0$. The double $0$-cell construction
+  $\{\sigma_B, \sigma_\infty\}$ is what places $X^A$ into the
+  Hansen--Ghrist regularity framework
+  \cite[Def.~1, Cond.~4]{HansenGhrist2019};
+  \cref{rem:rank-deficient-locus} delineates the rank-deficient
+  boundary on which the strict equality fails.
+\item Three previously disjoint domains
+  (\cref{sec:three_instances}) fit a common categorical template:
+  TopSP ($V_B^{\TopSP}$, \cref{subsec:6-topsp}), FEM--EM ($V_S^{\FEM}$,
+  \cref{subsec:6-femem}), and Brillouin zone tetrahedron quadrature
+  ($V_{\occ}^{\BZ}$, \cref{subsec:6-bz}). The three-instance
+  comparison is recorded in \cref{tab:6-instances}.
+\item The empirical proposition (\cref{empirical:8b}) formulates the
+  $S$--$I$ Pareto trade-off as a directional empirical statement
+  supported by two empirical channels and a heuristic skeleton
+  (\cref{tab:6-evidence}); it is not promoted to theorem status, and
+  it is not invoked in the proof of \cref{thm:strict-equality}---the
+  categorical bridge is independent of it.
+\item The numerical verification (\cref{sec:numerical}) records
+  $\mathrm{reldiff} \le 1.64 \times 10^{-14}$ across the three toy
+  instances at $\mathtt{seed} = 20260507$ (with Instances~1 and~3
+  attaining $\le 8 \times 10^{-16}$), with explicit scope: the script
+  verifies the SVD-based identity and the code path, not the
+  per-instance physical evidence
+  (\cref{subsec:7-honest-statement,tab:7-evidence}).
+\item Two independent open problems remain, formulated below.
+\end{enumerate}
+
+% -------------------------------------------------------------
+\subsection{Open Problem: non-trivial dagger on the full category}\label{subsec:disc-op-dagger}
+
+\Cref{op:non-trivial-dagger} asks whether the unitary subcategory
+groupoid of \cref{def:unitary-subcat} extends to a non-trivial
+$\dagger$ structure on the full category $\CellSh^{\fin}_{\Hilb}(X)$.
+The substantive content of this question is the tension between two
+candidate lifts: dagger compactness in $\Hilb$
+\cite[\S 2.3]{HeunenVicary2019} does not lift directly to cellular
+sheaves because the restriction maps are not in general isometries,
+while the dagger mono structure of
+\cite[\S 3]{LahtinenStenvall2020} does lift but produces only the
+unitary subgroupoid rather than a structure on the full category.
+\Cref{rem:trivial-dagger} explains why the naive lift collapses; the
+construction of a non-trivial extension is left open.
+\Cref{op:non-trivial-dagger} is independent of all theorems of this
+paper.
+
+% -------------------------------------------------------------
+\subsection{Open Problem: constructive Pareto proof}\label{subsec:disc-op-pareto}
+
+\Cref{op:8b-rigor} asks for a constructive Pareto-optimality proof
+upgrading the empirical proposition \cref{empirical:8b} to a
+theorem. The proposed mode of attack proceeds in three steps:
+compactness of the $V$-parameter space under suitable boundary
+conditions; convex relaxation of the joint map
+$V \mapsto (S(X^A_V), I(X^A_V))$, with the dual optimization
+encoding the trade-off; and closing the duality gap via spectral
+arguments paralleling \cite{Pilleboue2015}. Resolution of this
+problem would replace \cref{empirical:8b} by a theorem and the
+heuristic skeleton by a constructive proof. \Cref{op:8b-rigor} is
+independent of the categorical bridge and of all theorems of this
+paper.
+
+% -------------------------------------------------------------
+\subsection{Engineering outlook on the MRI side}\label{subsec:disc-mri-outlook}
+
+The triangle equivalence (\cref{thm:triangle-equiv}) and the strict
+equality (\cref{thm:strict-equality}) reduce, on the MRI sampling
+problem, to a singular value ratio computable directly from the
+acquisition matrix $A$. The project-internal numerical study
+recorded in \cref{tab:6-evidence} examines $35$ sampling
+configurations at $N = 200$; the multi-$N$ scan
+($N \in \{200, 300, 1000\}$) shows the top three configurations
+(Cartesian, random, sparkling) and the bottom two (spiral, radial)
+separated by two to three orders of magnitude in the singular value
+ratio across the entire range.
+A larger-scale engineering verification---with $N \approx 10^4$
+acquisition points, real phantom data, and one representative
+baseline drawn from each of the four schools surveyed in
+\cref{sec:related}---is the natural next step on the MRI side. That
+engineering verification is outside the scope of this paper.
+
+% -------------------------------------------------------------
+\subsection*{Acknowledgments}
+
+[Acknowledgments placeholder.]

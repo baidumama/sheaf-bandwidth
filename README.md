@@ -75,4 +75,4 @@ Independent Researcher.
 
 ## License
 
-[License placeholder — TBD]
+[MIT](LICENSE) © 2026 Independent Researcher.

@@ -110,12 +110,13 @@ The triangle equivalence (\cref{thm:triangle-equiv}) and the strict
 equality (\cref{thm:strict-equality}) reduce, on the MRI sampling
 problem, to a singular value ratio computable directly from the
 acquisition matrix $A$. The project-internal numerical study
-recorded in \cref{tab:6-evidence} examines $35$ sampling
-configurations at $N = 200$; the multi-$N$ scan
-($N \in \{200, 300, 1000\}$) shows the top three configurations
-(Cartesian, random, sparkling) and the bottom two (spiral, radial)
-separated by two to three orders of magnitude in the singular value
-ratio across the entire range.
+recorded in \cref{tab:6-evidence} examines $32$ sampling
+configurations at base scale $N \approx 300$; the multi-$N$ scan
+($N \in \{300, 1000, 3000, 5000\}$) shows a stable ordering---the top
+three configurations (Cartesian, random, sparkling) sit above the
+bottom two (spiral, radial) at every $N$---with the separation in the
+singular value ratio widening from under one order of magnitude at
+$N \approx 300$ to several orders by $N \approx 5000$.
 A larger-scale engineering verification---with $N \approx 10^4$
 acquisition points, real phantom data, and one representative
 baseline drawn from each of the four schools surveyed in

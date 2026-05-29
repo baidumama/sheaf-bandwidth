@@ -33,6 +33,12 @@ __pycache__/
 .claude/
 .context/
 
+# Application-layer artifacts kept out of this framework-only mirror
+# (maintained and synced separately; never staged here).
+/dwi/
+/lean/DWI/
+/lean/DWI.lean
+
 # Lean scratch files (not part of the formalization)
 _phase*.lean
 

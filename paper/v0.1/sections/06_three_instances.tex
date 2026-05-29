@@ -60,7 +60,7 @@ and by \cref{prop:sheafBW-unitary} this quantity is invariant under
 unitary equivalence of cellular sheaves over $X^A$. Each of the three
 instances below verifies the full-column-rank hypothesis under its
 standard configuration: Instance~1 by direct numerical check on
-$35$ MRI configurations (\cref{subsec:6-topsp}), Instance~2 by the
+$32$ MRI configurations (\cref{subsec:6-topsp}), Instance~2 by the
 $H^1$-Rayleigh basis of $V_S^{\FEM}$ being linearly independent at
 the chosen vertex sample (\cref{subsec:6-femem}), and Instance~3 by
 non-degeneracy of the linear tetrahedron weight matrix
@@ -111,17 +111,20 @@ By \cref{eq:6-strict},
   \frac{\sigma_{\min}(A^{\TopSP})}{\sigma_{\max}(A^{\TopSP})}.
 \]
 
-\paragraph{Empirical evidence on real MRI data.}
+\paragraph{Empirical evidence on simulated MRI sampling geometries.}
 A simulation suite developed in the present project applied
-$\sigma_{\min}(A^{\TopSP})/\sigma_{\max}(A^{\TopSP})$ to $35$
+$\sigma_{\min}(A^{\TopSP})/\sigma_{\max}(A^{\TopSP})$ to $32$
 configurations covering five trajectory families (Cartesian, random,
-sparkling, spiral, radial) and seven $V_s$ sizes ($M$ ranging from
-$30$ to $400$, with base scale $N = 200$). All $35$ configurations
-attained full column rank, with a clear ordering: Cartesian sampling
-at $\sheafBW \approx 0.0091$ versus radial sampling at $\sheafBW
-\approx 2.07 \times 10^{-5}$, separating the two regimes by more
-than two orders of magnitude. The
-ordering matches the reconstruction quality reported in MRI sampling
+sparkling, spiral, radial) over up to seven subsampling levels per
+family ($M$ ranging from $52$ to $305$, at base scale $N$ between
+$288$ and $305$; the central-symmetric inner-half level exists only
+for the spiral and radial families, giving $32$ rather than the full
+$5 \times 7$ grid). All $32$ configurations attained full column rank,
+with Cartesian ordering above radial at every matched subsampling
+level; at the most rank-stressed level the separation reaches more
+than two orders of magnitude (Cartesian $\sheafBW \approx 0.0091$
+versus radial $\sheafBW \approx 2.07 \times 10^{-5}$). This ordering is
+consistent with the reconstruction quality reported in MRI sampling
 practice \cite{LustigDonohoPauly2007,LazarusEtAl2019Sparkling}. The
 numerical study is reported in \cref{sec:numerical}.
 
@@ -361,7 +364,7 @@ $V_?$              & $V_B^{\TopSP}$ (Hodge band)     & $V_S^{\FEM}$ ($H^1$-Rayle
 $A_{n,l}$          & $v_l(i_n)$                       & $w_l(i_n)$                        & $w_{i_n j}^{\mathrm{lin}}$ \\
 Physical role of $A$ & row-sampling                   & row-sampling                      & integration weights \\
 $\sheafBW$         & $\sigma_{\min}/\sigma_{\max}$    & $\sigma_{\min}/\sigma_{\max}$     & $\sigma_{\min}/\sigma_{\max}$ \\
-Empirical evidence & $35/35$ MRI configs              & finite-dim restriction            & 50-year practice \\
+Empirical evidence & $32/32$ MRI configs              & finite-dim restriction            & 50-year practice \\
 Reference          & \cite{BarbarossaSardellitti2020} & \cite{AFW2010,Whitney1957}        & \cite{Blochl1994,LehmannTaut1972} \\
 \bottomrule
 \end{tabular}
@@ -458,7 +461,7 @@ empirical channels and a heuristic skeleton, recorded in
 \toprule
 \textbf{Type} & \textbf{Item} & \textbf{Source} & \textbf{Strength} \\
 \midrule
-Empirical & b3pre numerical study ($35$ configs, multi-$N$ robustness) & this paper, \cref{sec:numerical}      & strong \\
+Empirical & b3pre numerical study ($32$ configs, multi-$N$ robustness) & this paper, \cref{sec:numerical}      & strong \\
 Empirical & Brillouin zone practice (five decades)                       & \cite{Blochl1994,LehmannTaut1972,JepsenAndersen1971} & strong \\
 Heuristic & Euclidean spectral framework (Fourier-spectrum form)       & \cite{Pilleboue2015}                   & directional only \\
 \bottomrule

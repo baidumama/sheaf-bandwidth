@@ -7,6 +7,7 @@ defaultTargets = ["MRI"]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
 relaxedAutoImplicit = false
 weak.linter.mathlibStandardSet = true
+warningAsError = true
 maxSynthPendingDepth = 3
 
 [[require]]

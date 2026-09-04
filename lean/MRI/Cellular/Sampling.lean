@@ -217,7 +217,8 @@ variable {M : ℕ} (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 /-- Sampling operator `A : V_B → ℂ^M`(paper §5 eq:A-def):由 `eval : Fin M → E →L[ℂ] ℂ`
     装配为 LinearMap `E → (∀ _ : Fin M, ℂ)`(plain Π type)。
 
-    EuclideanSpace ℂ (Fin M)(PiLp 2 wrapper)的 Hilbert-level wrap 在     Spectral.lean form(用于 paper §5 spec(A*A) = singular values²)。 -/
+    EuclideanSpace ℂ (Fin M)(PiLp 2 wrapper)的 Hilbert-level wrap
+    在 Spectral.lean form(用于 paper §5 spec(A*A) = singular values²)。 -/
 noncomputable def samplingOp (eval : Fin M → E →L[ℂ] ℂ) :
     E →ₗ[ℂ] (∀ _ : Fin M, ℂ) where
   toFun c := fun i => eval i c
